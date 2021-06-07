@@ -20,23 +20,26 @@ import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import DashBorad from "../dashBorad";
 import User from "../userManagement";
 export default function MiniDrawer({ menu, page }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState( localStorage.getItem('open')!==''?localStorage.getItem('open') ==='true'?true :false:false);
   const classes = useStyles();
   const [selectMenu, setMenu] = React.useState(menu);
   // const history = useHistory();
 
   const handleDrawerOpen = () => {
     setOpen(true);
+    localStorage.setItem("open", 'true');
+
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    setOpen(false);   
+     localStorage.setItem("open", 'false');
+
   };
 
   const changeMenu = (callBack) => {
     setMenu(callBack);
-   
-  if(callBack==="Member Management"){
+     if(callBack==="Member Management"){
     window.location.href = '/userManagement';  
   }
   if(callBack==="Dashboard"){

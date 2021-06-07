@@ -118,9 +118,9 @@ export default function DashBorad() {
       <Grid container spacing={3} clasNsame={classes.chartList}>
         <Grid item xs={12} sm={12} md={7}>
           <Card variant="outlined" className={classes.pieDetail}>
-            <Typography variant="h6" color="primary">
+            {/* <Typography variant="h6" color="primary">
               Withdraw Deposit
-            </Typography>{" "}
+            </Typography>{" "} */}
             <CardContent>
               <BarChart />
             </CardContent>

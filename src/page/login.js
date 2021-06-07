@@ -8,6 +8,8 @@ import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined"
 import InputAdornment from "@material-ui/core/InputAdornment";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { useStyles } from "../style/login";
+import axios from 'axios';
+
 
 export default function Login() {
   const classes = useStyles();
@@ -29,13 +31,35 @@ export default function Login() {
 
   const onSubmit = (e) => {
     if (data.email !== "" && data.password !== "") {
-      window.location.href = '/dashBorad';  
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+      
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("username", data.email);
+      urlencoded.append("password", data.password);
+      
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+      
+      fetch("http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/employee/login", requestOptions)
+      .then(response => response.text())
+      .then(result => {console.log(result)
+        JSON.parse(result)
+        localStorage.setItem("token", JSON.parse(result).token);
+        if(JSON.parse(result).token !== undefined){
+        window.location.href = `/dashBorad?&token=${JSON.parse(result).token}`;  
+      }else{
+        setError(true)
+      }
 
+       })
+      
     } else {
-      // history.push({
-      //   pathname: "/dashBorad",
-      //   search: "?query=abc",
-      // });
+     
       setError(true);
     }
   };
@@ -53,7 +77,7 @@ export default function Login() {
               variant="outlined"
               label="Email"
               name="email"
-              error={error && data.email === "" ? true : false}
+              error={error && data.email === "" ||error? true : false}
               className={classes.inputField}
               value={data.email}
               onChange={handleChange}
@@ -71,7 +95,7 @@ export default function Login() {
               type="password"
               label="Password"
               name="password"
-              error={error && data.password === "" ? true : false}
+              error={error && data.password === "" ||error ? true : false}
               helperText={error ? error : ""}
               className={classes.inputField}
               value={data.password}
@@ -84,7 +108,7 @@ export default function Login() {
                 ),
               }}
             />
-            {error && (data.email === "" || data.password === "") ? (
+            {error && (data.email === "" || data.password === "") ||error? (
               <Typography className={classes.errorTypo}>
                 {messageError}
               </Typography>
