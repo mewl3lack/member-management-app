@@ -29,6 +29,8 @@ export default function Login() {
 
   const onSubmit = (e) => {
     if (data.email !== "" && data.password !== "") {
+      window.location.href = '/dashBorad';  
+
     } else {
       // history.push({
       //   pathname: "/dashBorad",

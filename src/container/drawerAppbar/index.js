@@ -35,6 +35,14 @@ export default function MiniDrawer({ menu, page }) {
 
   const changeMenu = (callBack) => {
     setMenu(callBack);
+   
+  if(callBack==="Member Management"){
+    window.location.href = '/userManagement';  
+  }
+  if(callBack==="Dashboard"){
+    window.location.href = '/dashBorad';  
+
+  }
     // history.push({
     //   pathname: "/",
     //   search: "?query=abc",
