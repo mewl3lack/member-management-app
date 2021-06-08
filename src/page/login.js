@@ -17,7 +17,7 @@ export default function Login() {
 		remember: false,
 	});
 	const [error, setError] = useState(false);
-	const [messageError, setMsgError] = useState(' Invalid Email or Password');
+	const [messageError, setMsgError] = useState(' Invalid Username or Password');
 
 	const handleChange = (e) => {
 		setData((prev) => ({
@@ -46,7 +46,7 @@ export default function Login() {
 					localStorage.setItem('token', `${JSON.parse(result).token}`);
 					localStorage.setItem('path', `?&token=${JSON.parse(result).token}`);
 					if (JSON.parse(result).token !== undefined) {
-						window.location.href = `/dashBorad?&token=${JSON.parse(result).token}`;
+						window.location.href = `/dashBoard?&token=${JSON.parse(result).token}`;
 					} else {
 						setError(true);
 					}
@@ -67,7 +67,7 @@ export default function Login() {
 						<TextField
 							id="outlined-adornment-email"
 							variant="outlined"
-							label="Email"
+							label="Username"
 							name="email"
 							error={(error && data.email === '') || error ? true : false}
 							className={classes.inputField}
