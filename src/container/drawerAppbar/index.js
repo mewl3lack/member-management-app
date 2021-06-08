@@ -40,10 +40,10 @@ export default function MiniDrawer({ menu, page }) {
     setMenu(callBack);
      if(callBack==="Member Management"){
        
-    window.location.href = '/userManagement'+  localStorage.getItem("token");  
+    window.location.href = '/userManagement'+  localStorage.getItem("path");  
   }
   if(callBack==="Dashboard"){
-    window.location.href = '/dashBorad'+  localStorage.getItem("token");  
+    window.location.href = '/dashBorad'+  localStorage.getItem("path");  
   }
   };
 
