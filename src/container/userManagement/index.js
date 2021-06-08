@@ -142,7 +142,19 @@ export default function User() {
 									color="primary"
 									className={classes.createButton}
 									startIcon={<AddTwoToneIcon />}
-									onClick={() => setCreateStatus(true)}
+									onClick={() => {
+										setCreateStatus(true);
+										setData({
+											tel: '',
+											bank: '',
+											bankAccount: '',
+											firstname: '',
+											surname: '',
+											pin: '',
+											about: '',
+										});
+										setCheckValidate(false);
+									}}
 								>
 									Create User
 								</Button>

@@ -8,7 +8,6 @@ import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined'
 import InputAdornment from '@material-ui/core/InputAdornment';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { useStyles } from '../style/login';
-import axios from 'axios';
 
 export default function Login() {
 	const classes = useStyles();

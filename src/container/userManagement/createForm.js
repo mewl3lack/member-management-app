@@ -10,7 +10,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Divider from '@material-ui/core/Divider';
 
-export function TextCustom({ onChange, value, name, placeholder, label }) {
+export function TextCustom({ onChange, value, name, placeholder, label, checkValidate }) {
 	return (
 		<TextField
 			id="outlined-basic"
@@ -19,7 +19,12 @@ export function TextCustom({ onChange, value, name, placeholder, label }) {
 			placeholder={placeholder}
 			variant="outlined"
 			onChange={onChange}
+			inputProps={{ maxLength: name === 'pin' ? 6 : '' }}
 			name={name}
+			type={name === 'pin' ? 'password' : ''}
+			style={{ width: name === 'pin' ? '60%' : '100%' }}
+			error={checkValidate && value === ''}
+			helperText={checkValidate && value === '' ? `please enter ${label}` : ''}
 		/>
 	);
 }
@@ -38,16 +43,22 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						name={'tel'}
 						placeholder={'000-000-0000'}
 						label={'Tel no.'}
+						checkValidate={checkValidate}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={12} md={6}></Grid>
 				<Grid item md={2} />
 				<Grid item xs={12} sm={12} md={4}>
-					<FormControl variant="outlined" className={classes.formControl}>
+					<FormControl
+						error={checkValidate && data.bank === ''}
+						variant="outlined"
+						className={classes.formControl}
+					>
 						<InputLabel id="demo-simple-select-outlined-label">Bank</InputLabel>
 						<Select
 							labelId="demo-simple-select-outlined-label"
 							value={data.bank}
+							label={'Bank'}
 							onChange={handleChange}
 							name={'bank'}
 						>
@@ -58,6 +69,9 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 							<MenuItem value={20}>2</MenuItem>
 							<MenuItem value={30}>3</MenuItem>
 						</Select>
+						<FormHelperText>
+							{checkValidate && data.bank === '' ? 'please select Bank' : ''}{' '}
+						</FormHelperText>
 					</FormControl>
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}>
@@ -67,6 +81,7 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						name={'bankAccount'}
 						placeholder={'000-000-0000'}
 						label={'Bank Account no.'}
+						checkValidate={checkValidate}
 					/>
 				</Grid>
 				<Grid item md={2} />
@@ -78,6 +93,7 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						name={'firstname'}
 						placeholder={'First name'}
 						label={'First name'}
+						checkValidate={checkValidate}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}>
@@ -87,31 +103,34 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						name={'surname'}
 						placeholder={'last name'}
 						label={'Lastname'}
+						checkValidate={checkValidate}
 					/>
 				</Grid>
 				<Grid item md={2} />
 				<Grid item md={2} />
 				<Grid item xs={12} sm={12} md={4}>
-					<TextField
-						value={data.pin}
-						id="outlined-basic"
-						label="PIN"
-						placeholder="xxxxxx"
-						variant="outlined"
-						type="password"
-						style={{ width: '60%' }}
+					<TextCustom
 						onChange={handleChange}
+						value={data.pin}
 						name={'pin'}
+						placeholder={'pin'}
+						label={'PIN'}
+						checkValidate={checkValidate}
 					/>
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}></Grid>
 				<Grid item md={2} /> <Grid item md={2} />
 				<Grid item xs={12} sm={12} md={4}>
-					<FormControl variant="outlined" className={classes.formControl}>
+					<FormControl
+						error={checkValidate && data.bank === ''}
+						variant="outlined"
+						className={classes.formControl}
+					>
 						<InputLabel id="demo-simple-select-outlined-label">How Did You Hear About Us</InputLabel>
 						<Select
 							labelId="demo-simple-select-outlined-label"
 							value={data.about}
+							label={'How Did You Hear About Us'}
 							onChange={handleChange}
 							name={'about'}
 						>
@@ -122,6 +141,9 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 							<MenuItem value={20}>2</MenuItem>
 							<MenuItem value={30}>3</MenuItem>
 						</Select>
+						<FormHelperText>
+							{checkValidate && data.about === '' ? 'please select How Did You Hear About Us' : ''}{' '}
+						</FormHelperText>
 					</FormControl>
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}></Grid>
