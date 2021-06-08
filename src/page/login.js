@@ -33,33 +33,28 @@ export default function Login() {
     if (data.email !== "" && data.password !== "") {
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-      
       var urlencoded = new URLSearchParams();
       urlencoded.append("username", data.email);
       urlencoded.append("password", data.password);
-      
       var requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: urlencoded,
         redirect: 'follow'
       };
-      
       fetch("http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/employee/login", requestOptions)
       .then(response => response.text())
       .then(result => {console.log(result)
         JSON.parse(result)
-        localStorage.setItem("token", JSON.parse(result).token);
+        localStorage.setItem("token",`?&token=${JSON.parse(result).token}`);
         if(JSON.parse(result).token !== undefined){
         window.location.href = `/dashBorad?&token=${JSON.parse(result).token}`;  
       }else{
         setError(true)
       }
-
        })
       
     } else {
-     
       setError(true);
     }
   };

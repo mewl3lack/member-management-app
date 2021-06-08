@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
         "& tr": {
           "& td": {
             marginBottom: "20px",
-            padding: "20px",
+            padding: "16px",
             fontSize: "16px",
             background: "#ffffff !important",
             BEBEBE: "1px solid #D8D8D8",
@@ -109,6 +109,7 @@ export default function TopSearchSelect({ type, search, datatable }) {
       entries={10}
       noBottomColumns
       paginationLabel={["<", ">"]}
+      responsive
       pagesAmount={6}
     />
   );

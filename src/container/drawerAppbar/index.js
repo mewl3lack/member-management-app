@@ -16,7 +16,7 @@ import PersonTwoToneIcon from "@material-ui/icons/PeopleAltTwoTone";
 import StorageTwoToneIcon from "@material-ui/icons/StorageTwoTone";
 import ListAltTwoToneIcon from "@material-ui/icons/ListAltTwoTone";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
-// import { useHistory } from "react-router-dom";
+import { Redirect } from 'react-router';
 import DashBorad from "../dashBorad";
 import User from "../userManagement";
 export default function MiniDrawer({ menu, page }) {
@@ -34,22 +34,17 @@ export default function MiniDrawer({ menu, page }) {
   const handleDrawerClose = () => {
     setOpen(false);   
      localStorage.setItem("open", 'false');
-
   };
 
   const changeMenu = (callBack) => {
     setMenu(callBack);
      if(callBack==="Member Management"){
-    window.location.href = '/userManagement';  
+       
+    window.location.href = '/userManagement'+  localStorage.getItem("token");  
   }
   if(callBack==="Dashboard"){
-    window.location.href = '/dashBorad';  
-
+    window.location.href = '/dashBorad'+  localStorage.getItem("token");  
   }
-    // history.push({
-    //   pathname: "/",
-    //   search: "?query=abc",
-    // });
   };
 
   return (

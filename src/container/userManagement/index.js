@@ -9,6 +9,7 @@ import DataTable from "../../component/dataTable";
 import random from "random-name";
 import Button from "@material-ui/core/Button";
 import AddTwoToneIcon from "@material-ui/icons/AddTwoTone";
+import axios from 'axios';
 
 export default function User() {
   const classes = useStyles();
@@ -27,17 +28,20 @@ export default function User() {
       label: "Bank",
       field: "Bank",
       width: 270,
+      sort: 'disabled',
     },
     {
       label: "Bank account number",
       field: "BankAccountNumber",
-      width: 270,
+      width: 270,         sort: 'disabled',
+
     },
     {
       label: "Create Date and time",
       field: "date",
       sort: "asc",
-      width: 100,
+      width: 100,        sort: 'disabled',
+
     },
   ];
   const [datatable, setDatatable] = React.useState({
@@ -46,19 +50,48 @@ export default function User() {
   const [createStatus, setCreateStatus] = React.useState(false);
 
   React.useEffect(() => {
-    for (let i = 0; i < 30; i++) {
-      rows.push({
-        name: random.first() + " " + random.last(),
-        Bank: i % Math.floor(Math.random() * 10 + 1) === 0 ? "SCB" : "KBANK",
-        date: "2021/09/15",
-        BankAccountNumber: Math.floor(Math.random() * 10000000000 + 1),
-      });
-    }
-    setDatatable({
+    getDataFromAPI()
+  }, []);
+
+
+  const getDataFromAPI = () => {
+    var config = {
+      method: 'get',
+      url: 'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/getList',
+      headers: { 
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RBZG1pbiIsInVzZXJJZCI6IjYwYmQwY2NmOTIzMmRlMDY3ZjJmZDU4NCIsImlhdCI6MTYyMzE1OTU0NywiZXhwIjoxNjIzMTYzMTQ3fQ.lTEKw5U4tz9lZt2gNNQRouo7QeZT1leWgQCuM-I1exY'
+      }
+    };
+    axios(config)
+    .then(function (response) {
+       getDataObject(response)
+     })
+    .catch(function (error) {
+      console.log(error);
+    });
+    
+  };
+
+  function getDataObject(dataItems) {
+    if (dataItems !== undefined  ) {
+       let len = dataItems.data.length;
+      for (let i = 0; i < len; i++) {
+        rows.push({
+          name: dataItems.data[i].first_name +' '+dataItems.data[i].last_name,
+          Bank: dataItems.data[i]._id  ,
+          BankAccountNumber: dataItems.data[i]._id  ,
+          date: dataItems.data[i]._id  , 
+        });     
+
+      }
+
+         setDatatable({
       columns,
       rows,
     });
-  }, []);
+     }
+  }
+
 
   return (
     <Grid container spacing={3}>
