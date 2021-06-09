@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import Divider from '@material-ui/core/Divider';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export function TextCustom({ onChange, value, name, placeholder, label, checkValidate }) {
 	return (
@@ -19,7 +20,7 @@ export function TextCustom({ onChange, value, name, placeholder, label, checkVal
 			placeholder={placeholder}
 			variant="outlined"
 			onChange={onChange}
-			inputProps={{ maxLength: name === 'pin' ? 6 : '' }}
+			inputProps={{ maxLength: name === 'pin' ? 6 : name === 'bankAccount' || name === 'tel' ? 10 : '' }}
 			name={name}
 			type={name === 'pin' ? 'password' : ''}
 			style={{ width: name === 'pin' ? '60%' : '100%' }}
@@ -28,8 +29,34 @@ export function TextCustom({ onChange, value, name, placeholder, label, checkVal
 		/>
 	);
 }
-
-export default function CreateUser({ createMember, checkValidate, handleChange, data, setCreateStatus }) {
+export function AutoCompleteCustom({ onChange, tag, option, name, value, label, checkValidate }) {
+	return (
+		<Autocomplete
+			id="combo-box-demo"
+			options={option}
+			name={name}
+			disableClearable
+			getOptionLabel={(option) => option.title}
+			onChange={(e, values) => {
+				onChange(e, values, tag);
+			}}
+			value={value.title}
+			renderInput={(params) => (
+				<TextField {...params} error={checkValidate && value === ''} label={label} variant="outlined" />
+			)}
+		/>
+	);
+}
+export default function CreateUser({
+	optionBank,
+	optionSource,
+	createMember,
+	checkValidate,
+	handleChange,
+	data,
+	setCreateStatus,
+	handleChangeAutoComplete,
+}) {
 	const classes = useStyles();
 
 	return (
@@ -46,7 +73,17 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						checkValidate={checkValidate}
 					/>
 				</Grid>
-				<Grid item xs={12} sm={12} md={6}></Grid>
+				<Grid item xs={12} sm={12} md={4}>
+					<TextCustom
+						onChange={handleChange}
+						value={data.line}
+						name={'line'}
+						placeholder={'Line ID'}
+						label={'Line ID'}
+						checkValidate={checkValidate}
+					/>
+				</Grid>{' '}
+				<Grid item md={2} />
 				<Grid item md={2} />
 				<Grid item xs={12} sm={12} md={4}>
 					<FormControl
@@ -54,21 +91,15 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						variant="outlined"
 						className={classes.formControl}
 					>
-						<InputLabel id="demo-simple-select-outlined-label">Bank</InputLabel>
-						<Select
-							labelId="demo-simple-select-outlined-label"
+						<AutoCompleteCustom
+							onChange={handleChange}
+							tag={'bank'}
+							option={optionBank}
+							name={'bank'}
 							value={data.bank}
 							label={'Bank'}
-							onChange={handleChange}
-							name={'bank'}
-						>
-							<MenuItem value="" disabled>
-								<em>None</em>
-							</MenuItem>
-							<MenuItem value={10}>1</MenuItem>
-							<MenuItem value={20}>2</MenuItem>
-							<MenuItem value={30}>3</MenuItem>
-						</Select>
+							checkValidate={checkValidate}
+						/>
 						<FormHelperText>
 							{checkValidate && data.bank === '' ? 'please select Bank' : ''}{' '}
 						</FormHelperText>
@@ -122,29 +153,23 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 				<Grid item md={2} /> <Grid item md={2} />
 				<Grid item xs={12} sm={12} md={4}>
 					<FormControl
-						error={checkValidate && data.bank === ''}
+						error={checkValidate && data.about === ''}
 						variant="outlined"
 						className={classes.formControl}
 					>
-						<InputLabel id="demo-simple-select-outlined-label">How Did You Hear About Us</InputLabel>
-						<Select
-							labelId="demo-simple-select-outlined-label"
+						<AutoCompleteCustom
+							onChange={handleChange}
+							tag={'source'}
+							option={optionSource}
+							name={'about'}
 							value={data.about}
 							label={'How Did You Hear About Us'}
-							onChange={handleChange}
-							name={'about'}
-						>
-							<MenuItem value="" disabled>
-								<em>None</em>
-							</MenuItem>
-							<MenuItem value={10}>1</MenuItem>
-							<MenuItem value={20}>2</MenuItem>
-							<MenuItem value={30}>3</MenuItem>
-						</Select>
+							checkValidate={checkValidate}
+						/>
 						<FormHelperText>
 							{checkValidate && data.about === '' ? 'please select How Did You Hear About Us' : ''}{' '}
 						</FormHelperText>
-					</FormControl>
+					</FormControl>{' '}
 				</Grid>
 				<Grid item xs={12} sm={12} md={4}></Grid>
 				<Grid item md={2} />
@@ -157,7 +182,6 @@ export default function CreateUser({ createMember, checkValidate, handleChange, 
 						color="secondary"
 						onClick={() => setCreateStatus(false)}
 						style={{ textAlign: '-webkit-right' }}
-						d
 					>
 						Cancel
 					</Button>

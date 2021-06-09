@@ -67,14 +67,17 @@ const useStyles = makeStyles((theme) => ({
 				},
 			},
 			'& tbody': {
-				textAlign: 'center !important',
 				'& tr': {
 					'& td': {
 						marginBottom: '20px',
 						padding: '16px',
 						fontSize: '14px',
+						textAlign: 'center !important',
+
 						background: '#ffffff !important',
 						border: '1px solid #F3F3F3',
+						textAlign: 'center',
+
 						'&:first-child': {
 							borderRadius: '12px 0  0px 12px',
 						},

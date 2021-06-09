@@ -6,13 +6,33 @@ import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import { useStyles } from './styles';
 import DataTable from '../../component/dataTable';
-import random from 'random-name';
 import Button from '@material-ui/core/Button';
 import AddTwoToneIcon from '@material-ui/icons/AddTwoTone';
 import axios from 'axios';
-
+import qs from 'qs';
+import Loader from '../../component/loaderBackdrop';
+import AlertSnackBar from '../../component/snackBarAlert';
 export default function User() {
 	const classes = useStyles();
+	const optionBank = [
+		{ title: 'SCB', value: 'SCB' },
+		{ title: 'BBL', value: 'BBL' },
+		{ title: 'KBANK', value: 'KBANK' },
+		{ title: 'UOB', value: 'UOB' },
+		{ title: 'BAY', value: 'BAY' },
+		{ title: 'KTB', value: 'KTB' },
+		{ title: 'TMB', value: 'TMB' },
+		{ title: 'TBANK', value: 'TBANK' },
+		{ title: 'CIMB', value: 'CIMB' },
+		{ title: 'LH', value: 'LH' },
+	];
+	const optionSource = [
+		{ title: 'Facebook', value: 'FB' },
+		{ title: 'Twitter', value: 'TW' },
+		{ title: 'Youtube', value: 'YT' },
+		{ title: 'Instagram', value: 'IG' },
+		{ title: 'other', value: 'OTHER' },
+	];
 	let rows = [];
 	let columns = [
 		{
@@ -56,13 +76,17 @@ export default function User() {
 		surname: '',
 		pin: '',
 		about: '',
+		line: '',
 	});
 	const [checkValidate, setCheckValidate] = React.useState(false);
+	const [loadingStatus, setLoader] = React.useState(false);
+	const [checkError, setError] = React.useState(false);
 
-	const handleChange = (e) => {
+	const handleChange = (e, value, type) => {
 		setData((prev) => ({
 			...prev,
-			[e.target.name]: e.target.value,
+			[type === 'source' ? 'about' : type === 'bank' ? 'bank' : e.target.name]:
+				type === 'source' || type === 'bank' ? value : e.target.value,
 		}));
 	};
 
@@ -74,12 +98,59 @@ export default function User() {
 			data.firstname === '' ||
 			data.surname === '' ||
 			data.pin === '' ||
-			data.about === ''
+			data.about === '' ||
+			data.line === ''
 		) {
 			setCheckValidate(true);
 		} else {
 			setCheckValidate(false);
+			createMember(
+				data.tel,
+				data.firstname,
+				data.surname,
+				data.bank.value,
+				data.bankAccount,
+				data.about.value,
+				data.pin,
+				data.line
+			);
 		}
+	};
+
+	const createMember = (tel, firstname, lastname, bank, bankAccount, source, pin, line) => {
+		setLoader(true);
+		var data = qs.stringify({
+			tel_no: tel,
+			first_name: firstname,
+			last_name: lastname,
+			bank_acc_vendor: bank,
+			bank_acc_no: bankAccount,
+			social_source: source,
+			pin: pin,
+			line_id: line,
+		});
+		var config = {
+			method: 'post',
+			url: 'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/addMember',
+			headers: {
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			data: data,
+		};
+
+		axios(config)
+			.then(function (response) {
+				setLoader(false);
+				if (response.data.status) {
+					setCreateStatus(false);
+					getDataFromAPI();
+				}
+			})
+			.catch(function (error) {
+				setLoader(false);
+				setError(true);
+			});
 	};
 
 	React.useEffect(() => {
@@ -107,11 +178,17 @@ export default function User() {
 		if (dataItems !== undefined) {
 			let len = dataItems.data.length;
 			for (let i = 0; i < len; i++) {
+				var date = new Date(dataItems.data[i].createAt);
+				var dateShow = date.getDate() + '/' + Number(date.getMonth() + 1) + '/' + date.getFullYear();
+				var time =
+					date.getHours() +
+					':' +
+					(Number(date.getMinutes()) < 10 ? '0' + date.getMinutes() : date.getMinutes());
 				rows.push({
 					name: dataItems.data[i].first_name + ' ' + dataItems.data[i].last_name,
-					Bank: dataItems.data[i]._id,
-					BankAccountNumber: dataItems.data[i]._id,
-					date: dataItems.data[i]._id,
+					Bank: dataItems.data[i].bank_acc_vendor,
+					BankAccountNumber: dataItems.data[i].bank_acc_no,
+					date: renderDateTime(dateShow, time),
 				});
 			}
 
@@ -120,6 +197,18 @@ export default function User() {
 				rows,
 			});
 		}
+	}
+	function renderDateTime(date, time) {
+		return (
+			<div>
+				<Typography variant="body2" style={{ fontSize: '14px' }}>
+					{date === 'NaN/NaN/NaN' ? '' : date}
+				</Typography>
+				<Typography variant="body2" color="secondary" style={{ fontSize: '14px', marginTop: '4px' }}>
+					{time === 'NaN:NaN' ? '' : '(' + time + ')'}
+				</Typography>
+			</div>
+		);
 	}
 
 	return (
@@ -152,6 +241,7 @@ export default function User() {
 											surname: '',
 											pin: '',
 											about: '',
+											line: '',
 										});
 										setCheckValidate(false);
 									}}
@@ -168,6 +258,8 @@ export default function User() {
 							data={data}
 							setCreateStatus={setCreateStatus}
 							createMember={onSubmit}
+							optionSource={optionSource}
+							optionBank={optionBank}
 						/>
 					) : (
 						''
@@ -182,9 +274,11 @@ export default function User() {
 						)}
 
 						<DataTable datatable={datatable} search={false} type={'border'} />
-					</CardContent>
+					</CardContent>{' '}
+					<AlertSnackBar status={checkError} setError={setError} />
 				</Card>
 			</Grid>
+			<Loader status={loadingStatus} />
 		</Grid>
 	);
 }
