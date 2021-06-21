@@ -16,7 +16,7 @@ import { getskeletonUserList } from "../../function/getSkeleton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DialogDelete from "./dialogDelete";
-import { useDialog } from "../../function/dialog";
+import { useDialog } from "../../function/useDialog";
 
 export default function User() {
   const classes = useStyles();
@@ -102,8 +102,11 @@ export default function User() {
   const [checkValidate, setCheckValidate] = React.useState(false);
   const [loadingStatus, setLoader] = React.useState(false);
   const [checkError, setError] = React.useState(false);
-  const [open, openDialog, closeDialog] = useDialog();
-
+  const [userId, setUserID] = React.useState("");
+  const [statusDialog, setStatusDialog] = React.useState("");
+  const closeDialog = () => {
+    setStatusDialog(false);
+  };
   const handleChange = (e, value, type) => {
     setData((prev) => ({
       ...prev,
@@ -254,7 +257,6 @@ export default function User() {
         >
           <EditIcon />
         </Button>
-        {"  "}
         <Button
           variant="contained"
           style={{
@@ -264,6 +266,10 @@ export default function User() {
           }}
           className={classes.button}
           disableElevation
+          onClick={(e) => {
+            setUserID(id);
+            setStatusDialog(true);
+          }}
         >
           <DeleteIcon />
         </Button>{" "}
@@ -289,7 +295,11 @@ export default function User() {
 
   return (
     <Grid container spacing={3}>
-      <DialogDelete />
+      <DialogDelete
+        open={statusDialog}
+        id={userId}
+        onCloseDialog={closeDialog}
+      />
       <Grid item xs={12} sm={12} md={12}>
         <Card className={classes.root} variant="outlined">
           <Grid container spacing={3}>
