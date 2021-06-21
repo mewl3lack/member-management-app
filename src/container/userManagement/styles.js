@@ -70,4 +70,16 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   fullDivider: { marginTop: "32px" },
+
+  buttonGroup: {
+    marginTop: "12px",
+    display: "flex",
+    justifyContent: "center",
+  },
+  buttonGroupDialog: {
+    "& .MuiButtonBase-root": {
+      minWidth: "100px",
+      marginLeft: "8px",
+    },
+  },
 }));
