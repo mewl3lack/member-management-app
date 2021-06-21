@@ -61,7 +61,7 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   formCreate: {
-    marginTop: "20px",
+    marginTop: "8px",
     "& .MuiFormControl-root": {
       width: "100%",
     },
@@ -80,7 +80,7 @@ export const useStyles = makeStyles((theme) => ({
     "& .MuiButtonBase-root": {
       minWidth: "100px",
       marginLeft: "8px",
-      borderRadius: "4px",
+      borderRadius: "8spx",
     },
   },
 }));

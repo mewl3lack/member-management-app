@@ -39,8 +39,8 @@ export default function DialogDelete(props) {
         onClose={props.onCloseDialog}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">
-          <Typography component="div" variant={"body1"} color={"primary"}>
+        <DialogTitle>
+          <Typography variant={"body1"} color={"primary"}>
             Edit user ID : {props.id}
           </Typography>
         </DialogTitle>
