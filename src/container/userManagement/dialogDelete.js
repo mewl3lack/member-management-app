@@ -9,7 +9,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import { useStyles } from "./styles";
 import { Typography } from "@material-ui/core";
-import { useDialog } from "../../function/useDialog";
 
 export default function DialogDelete(props) {
   const classes = useStyles();
