@@ -107,6 +107,10 @@ export default function User() {
   const [userId, setUserID] = React.useState("");
   const [statusDialog, setStatusDialog] = React.useState(false);
   const [statusEdit, setStatusEdit] = React.useState(false);
+  const [snackBar, setSnackBar] = React.useState({
+    string: "",
+    severity: "",
+  });
 
   const closeDialogEdit = () => {
     setStatusEdit(false);
@@ -186,11 +190,20 @@ export default function User() {
         if (response.data.status) {
           setCreateStatus(false);
           getDataFromAPI();
+          setError(true);
+          setSnackBar({
+            severity: "success",
+            string: "Create success",
+          });
         }
       })
       .catch(function (error) {
         setLoader(false);
         setError(true);
+        setSnackBar({
+          severity: "error",
+          string: "Can not create member ,please check your data",
+        });
       });
   };
 
@@ -386,7 +399,11 @@ export default function User() {
             )}
             <DataTable datatable={datatable} search={false} type={"border"} />
           </CardContent>
-          <AlertSnackBar status={checkError} setError={setError} />
+          <AlertSnackBar
+            status={checkError}
+            setError={setError}
+            snackCustom={snackBar}
+          />
         </Card>
       </Grid>
       <Loader status={loadingStatus} />
