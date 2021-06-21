@@ -12,6 +12,8 @@ import axios from 'axios';
 import qs from 'qs';
 import Loader from '../../component/loaderBackdrop';
 import AlertSnackBar from '../../component/snackBarAlert';
+import {getskeletonUserList} from  '../../function/getSkeleton'
+
 export default function User() {
 	const classes = useStyles();
 	const optionBank = [
@@ -45,6 +47,13 @@ export default function User() {
 			},
 		},
 		{
+			label: 'Tel.',
+			field: 'tel',
+			sort: 'asc',
+			width: 100,
+			sort: 'disabled',
+		},
+		{
 			label: 'Bank',
 			field: 'Bank',
 			width: 270,
@@ -65,7 +74,7 @@ export default function User() {
 		},
 	];
 	const [datatable, setDatatable] = React.useState({
-		columns,
+		columns, rows: getskeletonUserList()
 	});
 	const [createStatus, setCreateStatus] = React.useState(false);
 	const [data, setData] = React.useState({
@@ -165,7 +174,7 @@ export default function User() {
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			},
 		};
-		axios(config)
+ 		axios(config)
 			.then(function (response) {
 				getDataObject(response);
 			})
@@ -188,6 +197,7 @@ export default function User() {
 					name: dataItems.data[i].first_name + ' ' + dataItems.data[i].last_name,
 					Bank: dataItems.data[i].bank_acc_vendor,
 					BankAccountNumber: dataItems.data[i].bank_acc_no,
+					tel: dataItems.data[i].tel_no,
 					date: renderDateTime(dateShow, time),
 				});
 			}
@@ -250,7 +260,7 @@ export default function User() {
 								</Button>
 							)}
 						</Grid>
-					</Grid>{' '}
+					</Grid>
 					{createStatus ? (
 						<CreateUser
 							checkValidate={checkValidate}
@@ -272,9 +282,8 @@ export default function User() {
 						) : (
 							''
 						)}
-
 						<DataTable datatable={datatable} search={false} type={'border'} />
-					</CardContent>{' '}
+					</CardContent>
 					<AlertSnackBar status={checkError} setError={setError} />
 				</Card>
 			</Grid>
