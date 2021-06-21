@@ -17,7 +17,7 @@ export default function DialogDelete(props) {
   return (
     <React.Fragment>
       <Dialog
-        maxWidth={"sm"}
+        maxWidth={"md"}
         open={props.open}
         onClose={props.onCloseDialog}
         aria-labelledby="max-width-dialog-title"
