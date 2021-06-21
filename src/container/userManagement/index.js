@@ -16,6 +16,8 @@ import { getskeletonUserList } from "../../function/getSkeleton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import DialogDelete from "./dialogDelete";
+import DialogEdit from "./dialogEdit";
+
 import { useDialog } from "../../function/useDialog";
 
 export default function User() {
@@ -103,7 +105,12 @@ export default function User() {
   const [loadingStatus, setLoader] = React.useState(false);
   const [checkError, setError] = React.useState(false);
   const [userId, setUserID] = React.useState("");
-  const [statusDialog, setStatusDialog] = React.useState("");
+  const [statusDialog, setStatusDialog] = React.useState(false);
+  const [statusEdit, setStatusEdit] = React.useState(false);
+
+  const closeDialogEdit = () => {
+    setStatusEdit(false);
+  };
   const closeDialog = () => {
     setStatusDialog(false);
   };
@@ -252,17 +259,19 @@ export default function User() {
           className={classes.button}
           disableElevation
           onClick={(e) => {
-            alert(id);
+            setStatusEdit(true);
+            setUserID(id);
           }}
         >
           <EditIcon />
         </Button>
+        {"   "}
         <Button
-          variant="contained"
+          variant="outlined"
           style={{
-            color: "#ffffff",
+            color: "#D43E3E",
             border: "1px solid #D43E3E",
-            background: "#D43E3E",
+            // background: "#D43E3E",
           }}
           className={classes.button}
           disableElevation
@@ -299,6 +308,18 @@ export default function User() {
         open={statusDialog}
         id={userId}
         onCloseDialog={closeDialog}
+      />
+      <DialogEdit
+        id={userId}
+        onCloseDialog={closeDialogEdit}
+        open={statusEdit}
+        checkValidate={checkValidate}
+        handleChange={handleChange}
+        data={data}
+        setCreateStatus={setCreateStatus}
+        createMember={onSubmit}
+        optionSource={optionSource}
+        optionBank={optionBank}
       />
       <Grid item xs={12} sm={12} md={12}>
         <Card className={classes.root} variant="outlined">

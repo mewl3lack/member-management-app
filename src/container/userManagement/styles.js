@@ -80,6 +80,7 @@ export const useStyles = makeStyles((theme) => ({
     "& .MuiButtonBase-root": {
       minWidth: "100px",
       marginLeft: "8px",
+      borderRadius: "4px",
     },
   },
 }));
