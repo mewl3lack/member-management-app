@@ -12,13 +12,14 @@ import { Typography } from "@material-ui/core";
 
 export default function DialogDelete(props) {
   const classes = useStyles();
-
+ 
+ 
   return (
     <React.Fragment>
       <Dialog
         maxWidth={"md"}
         open={props.open}
-        onClose={props.onCloseDialog}
+        // onClose={props.onCloseDialog}
         aria-labelledby="max-width-dialog-title"
       >
         <DialogTitle id="max-width-dialog-title">
@@ -58,6 +59,7 @@ export default function DialogDelete(props) {
               color="primary"
               className={classes.button}
               disableElevation
+              onClick={(e)=>props.deleteMember(props.id)}
             >
               Confirm
             </Button>

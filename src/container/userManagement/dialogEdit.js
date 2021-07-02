@@ -151,7 +151,6 @@ export default function DialogDelete(props) {
 			},
 			data: data,
 		};
-
 		axios(config)
 			.then(function (response) {
 				setError(true);
@@ -171,6 +170,11 @@ export default function DialogDelete(props) {
 				});
 			});
 	};
+
+	const deleteMember = () => {
+	 alert('d')
+	};
+
 	return (
 		<React.Fragment>
 			{' '}

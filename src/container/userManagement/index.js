@@ -269,8 +269,7 @@ export default function User() {
 					style={{
 						color: '#D43E3E',
 						border: '1px solid #D43E3E',
-						// background: "#D43E3E",
-					}}
+ 					}}
 					className={classes.button}
 					disableElevation
 					onClick={(e) => {
@@ -295,10 +294,36 @@ export default function User() {
 			</div>
 		);
 	}
+	const deleteMember = (id) => {
+		var axios = require('axios');
+		var qs = require('qs');
+		var data = qs.stringify({
+		  'status': '0',
+		  'id': id 
+		});
+		var config = {
+		  method: 'put',
+		  url: 'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/updateMember',
+		  headers: { 
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+			'Content-Type': 'application/x-www-form-urlencoded'
+		  },
 
+		  data : data
+		};
+		
+		axios(config)
+		.then(function (response) {
+		  console.log(JSON.stringify(response.data));
+		})
+		.catch(function (error) {
+		  console.log(error);
+		});
+			   };
+	 
 	return (
 		<Grid container spacing={3}>
-			<DialogDelete open={statusDialog} id={userId} onCloseDialog={closeDialog} />
+			<DialogDelete deleteMember={deleteMember} open={statusDialog} id={userId} onCloseDialog={closeDialog} />
 			<DialogEdit
 				id={userId}
 				onCloseDialog={closeDialogEdit}
