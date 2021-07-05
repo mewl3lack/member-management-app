@@ -68,28 +68,23 @@ const useStyles = makeStyles((theme) => ({
       },
       '& tbody': {
         '& tr': {
-          height: '64px',
-
           '& td': {
-            marginBottom: '20px',
-            padding: '16px',
+            marginBottom: ' ',
             fontSize: '14px',
             textAlign: 'center !important',
             verticalAlign: 'middle',
             textAlign: 'left',
-            maxHeight: '64px',
-            minHeight: '64px',
-            background: '#ffffff !important',
+            maxHeight: '64px  !important',
+            minHeight: '64px !important',
             border: '1px solid #F3F3F3',
             textAlign: 'center',
-
+            padding: '12px 12px 12px 12px',
             '&:first-child': {
               borderRadius: '12px 0  0px 12px',
             },
             '&:last-child': {
               borderRadius: '0 12px 12px 0',
             },
-
             '&:nth-of-type(06)': {
               width: '168px',
               minWidth: '168px',

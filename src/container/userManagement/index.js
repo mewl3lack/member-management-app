@@ -249,9 +249,7 @@ export default function User() {
     }
     axios(config)
       .then(function (response) {
-        var res = _.orderBy(response.data, ['createAt'], ['asc'])
-        debugger
-
+        var res = _.orderBy(response.data, ['createAt'], ['desc'])
         getDataObject(res)
       })
       .catch(function (error) {
@@ -280,7 +278,7 @@ export default function User() {
           name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
           Bank: dataItems[i].bank_acc_vendor,
           BankAccountNumber: dataItems[i].bank_acc_no,
-          tel: dataItems[i].status,
+          tel: dataItems[i].tel_no,
           date: renderDateTime(dateShow, time),
           Status: (
             <StatusTemplate

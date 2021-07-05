@@ -1,29 +1,29 @@
-import { makeStyles } from "@material-ui/core/styles";
-import customTheme from "../../style/theme";
+import { makeStyles } from '@material-ui/core/styles'
+import customTheme from '../../style/theme'
 
-const drawerWidth = 300;
+const drawerWidth = 300
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    display: 'flex',
   },
   appBar: {
-    boxShadow: "none",
+    boxShadow: 'none',
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    "& .MuiTypography-h6": {
-      textTransform: "capitalize !important",
-      fontSize: "24px",
-      fontWeight: "400",
+    '& .MuiTypography-h6': {
+      textTransform: 'capitalize !important',
+      fontSize: '24px',
+      fontWeight: '400',
     },
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -32,35 +32,35 @@ export const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   hide: {
-    display: "none",
+    display: 'none',
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap',
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: "hidden",
+    overflowX: 'hidden',
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
   },
@@ -71,35 +71,50 @@ export const useStyles = makeStyles((theme) => ({
   },
 
   list: {
-    margin: "20px 14px 0 2px",
-    "& .MuiTypography-body1": {
-      fontSize: "16px !important",
+    margin: '20px 14px 0 2px',
+    '& .MuiTypography-body1': {
+      fontSize: '16px !important',
       fontWeight: 500,
-      color: "#898989",
+      color: '#898989',
     },
-    "& .MuiSvgIcon-root": {
-      fontSize: "28px !important",
-      color: "#E7E7E7",
+    '& .MuiSvgIcon-root': {
+      fontSize: '28px !important',
+      color: '#E7E7E7',
     },
-    "& .MuiListItem-root": {
-      height: "64px",
+    '& .MuiListItem-root': {
+      height: '64px',
     },
   },
 
   accountIcon: {
-    position: "absolute",
-    right: "0",
-    display: "flex",
-    fontWeight: "500 !important",
-    marginRight: "12px",
-    color: "#ffffff",
-    "& .MuiSvgIcon-root": {
-      fontSize: "32px !important",
+    position: 'absolute',
+    right: '0',
+    display: 'flex',
+    fontWeight: '500 !important',
+    marginRight: '12px',
+    color: '#ffffff',
+    '& .MuiSvgIcon-root': {
+      fontSize: '32px !important',
     },
-    "& .MuiTypography-body1": {
-      fontSize: "14px !important",
-      textAlign: "end",
-      marginRight: "12px",
+    '& .MuiTypography-body1': {
+      fontSize: '14px !important',
+      textAlign: 'end',
+      marginRight: '12px',
     },
   },
-}));
+  menuLogout: {
+    '& .MuiPaper-root': {
+      borderRadius: '12px',
+    },
+    '& .MuiMenuItem-root': {
+      fontSize: '12px !important',
+    },
+    '& .MuiSvgIcon-root': {
+      marginRight: '4px',
+    },
+  },
+  menuLogoutMain: {
+    position: 'relative',
+    top: '60px',
+  },
+}))
