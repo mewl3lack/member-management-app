@@ -69,3 +69,10 @@ table.dataTable thead .sorting_desc_disabled:after {
   border: "none !important";
   margin-right: 4px !important;
 }
+ 
+
+ .dataTables_wrapper .row div[data-test='datatable-pagination'] {
+  flex: 100%;
+  max-width: 100%;
+  display: flex;justify-content:center
+}
