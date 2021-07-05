@@ -1,7 +1,7 @@
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from '@material-ui/lab/Skeleton'
 
 export function getskeletonUserList() {
-  let row = [];
+  let row = []
   for (let i = 0; i < 10; i++) {
     row.push({
       name: <Skeleton animation="wave" />,
@@ -10,7 +10,24 @@ export function getskeletonUserList() {
       tel: <Skeleton animation="wave" />,
       date: <Skeleton animation="wave" />,
       action: <Skeleton animation="wave" />,
-    });
+    })
   }
-  return row;
+  return row
+}
+export function getskeletonTransaction() {
+  let row = []
+  for (let i = 0; i < 10; i++) {
+    row.push({
+      user_member_id: <Skeleton animation="wave" />,
+      type: <Skeleton animation="wave" />,
+      bank_acc_vendor_origin: <Skeleton animation="wave" />,
+      bank_acc_no_origin: <Skeleton animation="wave" />,
+      bank_acc_vendor_destination: <Skeleton animation="wave" />,
+      bank_acc_no_destination: <Skeleton animation="wave" />,
+      amount: <Skeleton animation="wave" />,
+      date: <Skeleton animation="wave" />,
+      Status: <Skeleton animation="wave" />,
+    })
+  }
+  return row
 }

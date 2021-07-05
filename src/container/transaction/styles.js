@@ -4,7 +4,7 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: '8px',
     border: 'none',
-    padding: '38px 24px 24px 24px',
+    // padding: '38px 24px 24px 24px',
     fontWeight: '500 !important',
     [theme.breakpoints.down('sm')]: {
       minHeight: '100px',
@@ -96,15 +96,18 @@ export const useStyles = makeStyles((theme) => ({
   circleDeleted: {
     background: '#d10000',
   },
+  circleDeleted: {
+    background: '#d10000',
+  },
   statusText: {
-    fontSize: '14px ',
+    fontSize: '18px ',
     textTransform: 'capitalize',
     color: '#000000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     '& .MuiTypography-body2': {
-      fontSize: '14px !important',
+      fontSize: '16px !important',
     },
   },
 }))

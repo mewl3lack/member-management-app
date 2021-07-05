@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         '& th': {
           color: '#7A7A7A',
           textAlign: 'center',
-          fontSize: '18px',
+          fontSize: '14px',
           background: '#ffffff !important',
           borderBottom: '1px solid #BEBEBE',
           fontWeight: 500,
@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center !important',
         '& tr': {
           '& td': {
+            verticalAlign: 'middle',
+
             marginBottom: '20px',
             padding: '16px',
             fontSize: '16px',
@@ -116,6 +118,7 @@ export default function TopSearchSelect({ type, search, datatable }) {
       displayEntries={false}
       entries={10}
       noBottomColumns
+      searching={type === 'nonBorder' ? false : true}
       paginationLabel={['<', '>']}
       // responsive
       pagesAmount={6}

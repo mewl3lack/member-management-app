@@ -11,7 +11,7 @@ import axios from 'axios'
 import qs from 'qs'
 import Loader from '../../component/loaderBackdrop'
 import AlertSnackBar from '../../component/snackBarAlert'
-import { getskeletonUserList } from '../../function/getSkeleton'
+import { getskeletonTransaction } from '../../function/getSkeleton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import _ from 'lodash'
@@ -19,19 +19,26 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import TabPanel from '@material-ui/lab/TabPanel'
 import TabContext from '@material-ui/lab/TabContext'
+import TextField from '@material-ui/core/TextField'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import Paper from '@material-ui/core/Paper'
 
 export function StatusTemplate({ string }) {
   const classes = useStyles()
   return (
     <div className={classes.statusText}>
-      <div
-        className={
-          string === 'Active'
-            ? `${classes.circle} ${classes.circleActive}`
-            : `${classes.circle} ${classes.circleDeleted}`
-        }
-      ></div>
-      <Typography variant="body2" noWrap>
+      <Typography
+        variant="body2"
+        noWrap
+        style={{
+          color:
+            string === 'Completed' || string === 'W/D'
+              ? '#00b812'
+              : string === 'Pending'
+              ? '#e0a500'
+              : '#d10000',
+        }}
+      >
         {string}
       </Typography>
     </div>
@@ -43,35 +50,42 @@ export default function User() {
   let rows = []
   let columns = [
     {
-      label: 'Name',
-      field: 'name',
-      width: 150,
-      attributes: {
-        'aria-controls': 'DataTable',
-        'aria-label': 'Name',
-      },
+      label: 'Member ID',
+      field: 'user_member_id',
     },
     {
-      label: 'Tel.',
-      field: 'tel',
+      label: 'Type.',
+      field: 'type',
       sort: 'asc',
-      width: 100,
       sort: 'disabled',
     },
     {
-      label: 'Bank',
-      field: 'Bank',
-      width: 270,
+      label: 'Origin Bank',
+      field: 'bank_acc_vendor_origin',
       sort: 'disabled',
     },
     {
-      label: 'Bank account number',
-      field: 'BankAccountNumber',
-      width: 270,
+      label: 'Origin Bank Acc no.',
+      field: 'bank_acc_no_origin',
       sort: 'disabled',
     },
     {
-      label: 'Create Date and time',
+      label: 'Destination bank ',
+      field: 'bank_acc_vendor_destination',
+      sort: 'disabled',
+    },
+    {
+      label: 'Destination Bank Acc no.',
+      field: 'bank_acc_no_destination',
+      sort: 'disabled',
+    },
+    {
+      label: 'Amount',
+      field: 'amount',
+      sort: 'disabled',
+    },
+    {
+      label: 'Create At',
       field: 'date',
       sort: 'asc',
       width: 100,
@@ -83,52 +97,58 @@ export default function User() {
       sort: 'asc',
       width: 100,
     },
-    {
-      label: 'Action',
-      field: 'action',
-      sort: 'asc',
-      width: 100,
-      sort: 'disabled',
-    },
   ]
   const [datatable, setDatatable] = React.useState({
     columns,
-    rows: getskeletonUserList(),
+    rows: getskeletonTransaction(),
   })
-  const [createStatus, setCreateStatus] = React.useState(false)
-  const [data, setData] = React.useState({
-    tel: '',
-    bank: '',
-    bankAccount: '',
-    firstname: '',
-    surname: '',
-    pin: '',
-    about: '',
-    line: '',
-  })
-  const [checkValidate, setCheckValidate] = React.useState(false)
-  const [loadingStatus, setLoader] = React.useState(false)
+
   const [checkError, setError] = React.useState(false)
-  const [userId, setUserID] = React.useState('')
-  const [statusDialog, setStatusDialog] = React.useState(false)
-  const [statusEdit, setStatusEdit] = React.useState(false)
   const [snackBar, setSnackBar] = React.useState({
     string: '',
     severity: '',
   })
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState('a')
+
+  const top100Films = [
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'The Godfather', year: 1972 },
+    { title: 'The Godfather: Part II', year: 1974 },
+  ]
+  React.useEffect(() => {
+    getDataFromAPI('All')
+  }, [])
+
   const handleChange = (event, newValue) => {
+    newValue === 'd'
+      ? getDataFromAPI('DEP')
+      : newValue === 'w'
+      ? getDataFromAPI('W/D')
+      : getDataFromAPI('All')
     setValue(newValue)
   }
 
-  const getDataFromAPI = () => {
+  const getDataFromAPI = (type) => {
+    setDatatable({
+      columns,
+      rows: getskeletonTransaction(),
+    })
+    if (type === 'All') {
+      var params = {}
+    } else {
+      var params = {
+        query: `{"type":"${type}" }`,
+      }
+    }
+
     var config = {
       method: 'get',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/getList',
+        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
+      params,
     }
     axios(config)
       .then(function (response) {
@@ -136,7 +156,11 @@ export default function User() {
         getDataObject(res)
       })
       .catch(function (error) {
-        console.log(error)
+        setError(true)
+        setSnackBar({
+          severity: 'error',
+          string: `can not get transaction log`,
+        })
       })
   }
 
@@ -158,24 +182,29 @@ export default function User() {
             ? '0' + date.getMinutes()
             : date.getMinutes())
         rows.push({
-          name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
-          Bank: dataItems[i].bank_acc_vendor,
-          BankAccountNumber: dataItems[i].bank_acc_no,
-          tel: dataItems[i].status,
+          user_member_id: dataItems[i].user_member_id,
+          type: (
+            <StatusTemplate
+              string={dataItems[i].type === 'DEP' ? 'DEP' : 'W/D'}
+            />
+          ),
+          bank_acc_vendor_origin: dataItems[i].bank_acc_vendor_origin,
+          bank_acc_no_origin: dataItems[i].bank_acc_no_origin,
+          bank_acc_vendor_destination: dataItems[i].bank_acc_vendor_destination,
+          bank_acc_no_destination: dataItems[i].bank_acc_no_destination,
+          amount: dataItems[i].amount,
+
           date: renderDateTime(dateShow, time),
           Status: (
             <StatusTemplate
-              string={Number(dataItems[i].status) === 1 ? 'Active' : 'Deleted'}
+              string={
+                dataItems[i].status === 'COMPLETED'
+                  ? 'Completed'
+                  : dataItems[i].status === 'PENDING'
+                  ? 'Pending'
+                  : 'Failed'
+              }
             />
-          ),
-          action: (
-            <div id={Number(dataItems[i].status) === 1 ? 'active' : 'delete'}>
-              {renderAction(
-                dataItems[i]._id,
-                dataItems[i].status,
-                Number(dataItems[i].status) === 1 ? true : false,
-              )}
-            </div>
           ),
         })
       }
@@ -187,42 +216,6 @@ export default function User() {
     }
   }
 
-  function renderAction(id, status, active) {
-    return (
-      <div id={Number(status) === 0 ? 'deleted' : 'active'}>
-        <Button
-          variant="outlined"
-          color="primary"
-          className={classes.button}
-          disableElevation
-          disabled={!active}
-          onClick={(e) => {
-            setStatusEdit(true)
-            setUserID(id)
-          }}
-        >
-          <EditIcon />
-        </Button>
-        {'   '}
-        <Button
-          variant="outlined"
-          style={{
-            color: !active ? '' : '#D43E3E',
-            border: !active ? '' : '1px solid #D43E3E',
-          }}
-          className={classes.button}
-          disableElevation
-          disabled={!active}
-          onClick={(e) => {
-            setUserID(id)
-            setStatusDialog(true)
-          }}
-        >
-          <DeleteIcon />
-        </Button>{' '}
-      </div>
-    )
-  }
   function renderDateTime(date, time) {
     return (
       <div>
@@ -246,55 +239,73 @@ export default function User() {
     <Grid container spacing={3}>
       <Grid item xs={12} sm={12} md={12}>
         <TabContext value={value}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={12} md={6}>
+          <Grid container>
+            <Grid
+              item
+              xs={6}
+              sm={6}
+              md={4}
+              style={{ float: 'left !important' }}
+            >
               <Tabs
                 value={value}
                 onChange={handleChange}
                 indicatorColor="primary"
                 textColor="primary"
                 centered
+                style={{ background: '#ffffff' }}
               >
-                <Tab label="Item One" value="1" />
-                <Tab label="Item Two" value="2" />
-                <Tab label="Item Three" value="3" />
-              </Tabs>{' '}
-            </Grid>{' '}
-            <Grid item xs={12} sm={12} md={3}>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                indicatorColor="primary"
-                textColor="primary"
-                centered
-              >
-                <Tab label="Item One" value="1" />
-                <Tab label="Item Two" value="2" />
-                <Tab label="Item Three" value="3" />
-              </Tabs>{' '}
-            </Grid>{' '}
+                <Tab label="All" value="a" />
+                <Tab label="Withdraw" value="w" />
+                <Tab label="Deposit" value="d" />
+              </Tabs>
+            </Grid>
+            <Grid item xs={6} sm={6} md={6}>
+              {/* <Autocomplete
+                id="combo-box-demo"
+                PaperComponent={({ children }) => (
+                  <Paper style={{ background: '#ffffff' }}>{children}</Paper>
+                )}
+                options={top100Films}
+                getOptionLabel={(option) => option.title}
+                style={{ width: 300 }}
+                disableClearable
+                renderInput={(params) => (
+                  <TextField {...params} label="Combo box" variant="outlined" />
+                )}
+              /> */}
+            </Grid>
           </Grid>
-          <TabPanel value="1">Item One</TabPanel>{' '}
+          <Card className={classes.root} variant="outlined">
+            <TabPanel value="a">
+              <DataTable
+                datatable={datatable}
+                search={false}
+                type={'nonBorder'}
+              />
+            </TabPanel>
+            <TabPanel value="w">
+              <DataTable
+                datatable={datatable}
+                search={false}
+                type={'nonBorder'}
+              />
+            </TabPanel>
+            <TabPanel value="d">
+              <DataTable
+                datatable={datatable}
+                search={false}
+                type={'nonBorder'}
+              />
+            </TabPanel>
+          </Card>
         </TabContext>
 
-        <Card className={classes.root} variant="outlined">
-          <Grid container spacing={3}>
-            <Grid item xs={6} sm={6} md={8}>
-              <Typography variant="h6" color="primary">
-                {createStatus ? 'Create member' : ' Member List'}
-              </Typography>
-            </Grid>
-            <Grid item xs={6} sm={6} md={4} className={classes.flexEnd}></Grid>
-          </Grid>
-
-          <DataTable datatable={datatable} search={false} type={'border'} />
-
-          <AlertSnackBar
-            status={checkError}
-            setError={setError}
-            snackCustom={snackBar}
-          />
-        </Card>
+        <AlertSnackBar
+          status={checkError}
+          setError={setError}
+          snackCustom={snackBar}
+        />
       </Grid>
     </Grid>
   )
