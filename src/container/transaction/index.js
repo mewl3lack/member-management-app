@@ -32,7 +32,7 @@ export function StatusTemplate({ string }) {
         noWrap
         style={{
           color:
-            string === 'Completed' || string === 'W/D'
+            string === 'Completed' || string === 'DEP'
               ? '#00b812'
               : string === 'Pending'
               ? '#e0a500'

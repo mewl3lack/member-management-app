@@ -98,7 +98,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function TopSearchSelect({ type, search, datatable }) {
+export default function TopSearchSelect({
+  type,
+  search,
+  datatable,
+  onFunction,
+}) {
   const classes = useStyles()
 
   return (
@@ -120,8 +125,13 @@ export default function TopSearchSelect({ type, search, datatable }) {
       noBottomColumns
       searching={type === 'nonBorder' ? false : true}
       paginationLabel={['<', '>']}
-      // responsive
+      id={'datatable'}
       pagesAmount={6}
+      onSort={(value) =>
+        onFunction !== undefined
+          ? onFunction(value)
+          : console.log('fn not found')
+      }
     />
   )
 }

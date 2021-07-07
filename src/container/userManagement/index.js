@@ -20,7 +20,7 @@ import DialogEdit from './dialogEdit'
 import { CreateIntervalCall } from './interval'
 import _ from 'lodash'
 import Collapse from '@material-ui/core/Collapse'
-
+import MoneyOffIcon from '@material-ui/icons/MoneyOff'
 export function StatusTemplate({ string }) {
   const classes = useStyles()
   return (
@@ -75,26 +75,22 @@ export default function User() {
       field: 'tel',
       sort: 'asc',
       width: 100,
-      sort: 'disabled',
     },
     {
       label: 'Bank',
       field: 'Bank',
       width: 270,
-      sort: 'disabled',
     },
     {
       label: 'Bank account number',
       field: 'BankAccountNumber',
       width: 270,
-      sort: 'disabled',
     },
     {
       label: 'Create Date and time',
       field: 'date',
       sort: 'asc',
       width: 100,
-      sort: 'disabled',
     },
     {
       label: 'Status',
@@ -135,6 +131,7 @@ export default function User() {
     string: '',
     severity: '',
   })
+  const [customDatable, setDataTable] = React.useState()
 
   const closeDialogEdit = () => {
     setStatusEdit(false)
@@ -279,12 +276,17 @@ export default function User() {
           Bank: dataItems[i].bank_acc_vendor,
           BankAccountNumber: dataItems[i].bank_acc_no,
           tel: dataItems[i].tel_no,
-          date: renderDateTime(dateShow, time),
+          BankAccountNumber: dataItems[i].bank_acc_no,
+          statusForSearch:
+            Number(dataItems[i].status) === 1 ? 'Active' : 'Deleted',
           Status: (
             <StatusTemplate
               string={Number(dataItems[i].status) === 1 ? 'Active' : 'Deleted'}
             />
           ),
+          date: renderDateTime(dateShow, time),
+          dateForSearch: dateShow,
+          timeForSearch: time,
           action: (
             <div id={Number(dataItems[i].status) === 1 ? 'active' : 'delete'}>
               {renderAction(
@@ -318,8 +320,7 @@ export default function User() {
           }}
         >
           <EditIcon />
-        </Button>
-        {'   '}
+        </Button>{' '}
         <Button
           variant="outlined"
           style={{
@@ -335,6 +336,18 @@ export default function User() {
           }}
         >
           <DeleteIcon />
+        </Button>{' '}
+        <Button
+          variant="outlined"
+          style={{
+            color: !active ? '' : '#fabf3e',
+            border: !active ? '' : '1px solid #fabf3e',
+          }}
+          className={classes.button}
+          disableElevation
+          disabled={true}
+        >
+          <MoneyOffIcon />
         </Button>{' '}
       </div>
     )
@@ -373,7 +386,6 @@ export default function User() {
 
       data: data,
     }
-
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data))
@@ -405,6 +417,23 @@ export default function User() {
         .classList.remove(classes.deleteUser)
     }
   }
+
+  function sortCustom(value) {
+    if (value.column === 'date') {
+      console.log(datatable.rows)
+      setDatatable({
+        columns,
+        rows: _.orderBy(datatable.rows, ['dateForSearch'], [value.direction]),
+      })
+      console.log(datatable.rows)
+    } else if (value.column === 'Status') {
+      setDatatable({
+        columns,
+        rows: _.orderBy(datatable.rows, ['statusForSearch'], [value.direction]),
+      })
+    }
+  }
+
   return (
     <Grid container spacing={3}>
       <DialogDelete
@@ -490,7 +519,12 @@ export default function User() {
             ) : (
               ''
             )}
-            <DataTable datatable={datatable} search={false} type={'border'} />
+            <DataTable
+              datatable={datatable}
+              search={false}
+              type={'border'}
+              onFunction={sortCustom}
+            />
           </CardContent>
           <AlertSnackBar
             status={checkError}

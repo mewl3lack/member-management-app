@@ -54,54 +54,60 @@ export default function DialogDelete(props) {
     axios(config)
       .then(function (response) {
         if (response !== []) {
-          if (response.data[0].social_source !== undefined) {
+          if (response.data.result[0].social_source !== undefined) {
             var value =
-              response.data[0].social_source === 'FB'
+              response.data.result[0].social_source === 'FB'
                 ? 'Facebook'
-                : response.data[0].social_source === 'TW'
+                : response.data.result[0].social_source === 'TW'
                 ? 'Twitter'
-                : response.data[0].social_source === 'YT'
+                : response.data.result[0].social_source === 'YT'
                 ? 'Youtube'
-                : response.data[0].social_source === 'IG'
+                : response.data.result[0].social_source === 'IG'
                 ? 'Instagram'
-                : response.data[0].social_source === 'OTHER'
+                : response.data.result[0].social_source === 'OTHER'
                 ? 'other'
-                : response.data[0].social_source
+                : response.data.result[0].social_source
           }
           setData({
             tel:
-              response.data[0].tel_no === undefined
+              response.data.result[0].tel_no === undefined
                 ? ''
-                : response.data[0].tel_no,
+                : response.data.result[0].tel_no,
             bank: {
               title:
-                response.data[0].bank_acc_vendor === undefined
+                response.data.result[0].bank_acc_vendor === undefined
                   ? ''
-                  : response.data[0].bank_acc_vendor,
+                  : response.data.result[0].bank_acc_vendor,
               value: 'FB',
             },
             bankAccount:
-              response.data[0].bank_acc_no === undefined
+              response.data.result[0].bank_acc_no === undefined
                 ? ''
-                : response.data[0].bank_acc_no,
+                : response.data.result[0].bank_acc_no,
             firstname:
-              response.data[0].first_name === undefined
+              response.data.result[0].first_name === undefined
                 ? ''
-                : response.data[0].first_name,
+                : response.data.result[0].first_name,
             surname:
-              response.data[0].last_name === undefined
+              response.data.result[0].last_name === undefined
                 ? ''
-                : response.data[0].last_name,
-            pin: response.data[0].pin === undefined ? '' : response.data[0].pin,
+                : response.data.result[0].last_name,
+            pin:
+              response.data.result[0].pin === undefined
+                ? ''
+                : response.data.result[0].pin,
             about: {
-              title: response.data[0].social_source === undefined ? '' : value,
+              title:
+                response.data.result[0].social_source === undefined
+                  ? ''
+                  : value,
               value: 'FB',
             },
             line:
-              response.data[0].line_id === undefined
+              response.data.result[0].line_id === undefined
                 ? ''
-                : response.data[0].line_id,
-            id: response.data[0]._id,
+                : response.data.result[0].line_id,
+            id: response.data.result[0]._id,
           })
         }
       })
