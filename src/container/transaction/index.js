@@ -50,8 +50,8 @@ export default function User() {
   let rows = []
   let columns = [
     {
-      label: 'Member ID',
-      field: 'user_member_id',
+      label: 'Tel.',
+      field: 'tel_no',
     },
     {
       label: 'Type.',
@@ -134,10 +134,14 @@ export default function User() {
       rows: getskeletonTransaction(),
     })
     if (type === 'All') {
-      var params = {}
+      var params = {
+        query: `
+        [{"$match":{}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+      }
     } else {
       var params = {
-        query: `{"type":"${type}" }`,
+        query: `
+        [{"$match":{"type":"${type}"}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       }
     }
 
@@ -152,10 +156,11 @@ export default function User() {
     }
     axios(config)
       .then(function (response) {
-        var res = _.orderBy(response.data, ['createAt'], ['desc'])
+        var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
       })
       .catch(function (error) {
+        debugger
         setError(true)
         setSnackBar({
           severity: 'error',
@@ -182,7 +187,7 @@ export default function User() {
             ? '0' + date.getMinutes()
             : date.getMinutes())
         rows.push({
-          user_member_id: dataItems[i].user_member_id,
+          tel_no: dataItems[i].members[0].tel_no,
           type: (
             <StatusTemplate
               string={dataItems[i].type === 'DEP' ? 'DEP' : 'W/D'}

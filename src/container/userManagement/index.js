@@ -249,7 +249,7 @@ export default function User() {
     }
     axios(config)
       .then(function (response) {
-        var res = _.orderBy(response.data, ['createAt'], ['desc'])
+        var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
       })
       .catch(function (error) {
@@ -296,7 +296,6 @@ export default function User() {
           ),
         })
       }
-
       setDatatable({
         columns,
         rows,
