@@ -46,7 +46,6 @@ export function StatusTemplate({ string }) {
 }
 export default function User() {
   const classes = useStyles()
-
   let rows = []
   let columns = [
     {
@@ -160,7 +159,6 @@ export default function User() {
         getDataObject(res)
       })
       .catch(function (error) {
-        debugger
         setError(true)
         setSnackBar({
           severity: 'error',
