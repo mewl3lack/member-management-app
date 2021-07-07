@@ -96,6 +96,88 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+
+  dataTableDashBorad: {
+    '& table': {
+      textAlign: 'center',
+      borderCollapse: 'separate',
+      borderSpacing: '0px 8px',
+      '& thead': {
+        '& th': {
+          fontSize: '14px',
+          textAlign: 'center',
+          background: '#C3CAD4',
+          border: 'none',
+          fontWeight: '500',
+          borderRight: '1px solid #ffffff',
+          padding: '12px 8px',
+          '&:first-child': {
+            borderRadius: '30px 0  0px 30px',
+            width: '272px',
+            minWidth: '272px',
+          },
+          '&:last-child': {
+            borderRadius: '0 30px 30px 0',
+            border: 'none',
+          },
+          // '&:nth-of-type(02)': {
+          //   width: '160px',
+          //   minWidth: '160px',
+          // },
+          // '&:nth-of-type(03)': {
+          //   width: '220px',
+          //   minWidth: '220px',
+          // },
+          // '&:nth-of-type(05)': {
+          //   width: '144px',
+          //   minWidth: '144px',
+          // },
+          // '&:nth-of-type(06)': {
+          //   width: '108px',
+          //   minWidth: '108px',
+          // },
+          // '&:nth-of-type(07)': {
+          //   width: 'calc(100% - 992px)',
+          //   minWidth: '96px',
+          // },
+          // '&:nth-of-type(04),&:nth-of-type(08)': {
+          //   width: '88px',
+          //   minWidth: '88px',
+          // },
+        },
+      },
+      '& tbody': {
+        textAlign: 'center !important',
+        '& tr': {
+          padding: '12px 8px',
+          height: '64px',
+          '& td': {
+            marginBottom: '20px',
+            padding: '8px',
+            background: '#ffffff !important',
+            border: 'none',
+            verticalAlign: 'middle',
+            fontSize: '14px',
+            borderTop: 'rgba(200,200,200,100%) 1px solid',
+            borderBottom: 'rgba(200,200,200,100%) 1px solid',
+            '& .MuiTypography-body1': {
+              fontSize: '14px',
+            },
+            '&:first-child': {
+              borderLeft: 'rgba(200,200,200,100%) 1px solid',
+              borderTopLeftRadius: '12px',
+              borderBottomLeftRadius: '12px',
+            },
+            '&:last-child': {
+              borderRight: 'rgba(200,200,200,100%) 1px solid',
+              borderTopRightRadius: '12px',
+              borderBottomRightRadius: '12px',
+            },
+          },
+        },
+      },
+    },
+  },
 }))
 
 export default function TopSearchSelect({
@@ -117,6 +199,8 @@ export default function TopSearchSelect({
       className={
         type === 'border'
           ? `${classes.dataTableWithBorder} ${classes.searchBar}`
+          : type === 'dashborad'
+          ? `${classes.dataTableDashBorad} ${classes.searchBar}`
           : `${classes.dataTable} ${classes.searchBar}`
       }
       info={false}

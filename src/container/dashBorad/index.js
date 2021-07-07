@@ -388,7 +388,7 @@ export default function DashBorad() {
         <Grid item xs={12} sm={12} md={12}>
           <Card
             variant="outlined"
-            className={`${classes.dataTable} ${classes.pieDetail}`}
+            className={`${classes.dataTable} ${classes.pieDetail} ${classes.dataTableBG}`}
           >
             <Typography variant="h6" color="primary">
               New User{' '}
@@ -398,6 +398,7 @@ export default function DashBorad() {
                 datatable={datatableUser}
                 search={false}
                 onFunction={sortCustom}
+                type={'dashborad'}
               />
             </CardContent>
           </Card>
