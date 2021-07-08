@@ -285,17 +285,15 @@ export default function DashBorad() {
   // end
 
   function sortCustom(value) {
+    alert(value.direction)
     if (value.column === 'date') {
-      console.log(datatable.rows)
-      setDatatable({
-        columns,
-        rows: _.orderBy(datatable.rows, ['dateForSearch'], [value.direction]),
-      })
-      console.log(datatable.rows)
-    } else if (value.column === 'Status') {
-      setDatatable({
-        columns,
-        rows: _.orderBy(datatable.rows, ['statusForSearch'], [value.direction]),
+      setDatatableUser({
+        columns: columnsUser,
+        rows: _.orderBy(
+          datatableUser.rows,
+          ['dateForSearch', 'timeForSearch'],
+          [value.direction, value.direction],
+        ),
       })
     }
   }
@@ -391,14 +389,13 @@ export default function DashBorad() {
             className={`${classes.dataTable} ${classes.pieDetail} ${classes.dataTableBG}`}
           >
             <Typography variant="h6" color="primary">
-              New User{' '}
+              New 20 Users{' '}
             </Typography>
             <CardContent>
               <DataTable
                 datatable={datatableUser}
                 search={false}
                 onFunction={sortCustom}
-                type={'dashborad'}
               />
             </CardContent>
           </Card>
