@@ -1,5 +1,7 @@
 import axios from 'axios'
 import Typography from '@material-ui/core/Typography'
+import _ from 'lodash'
+
 export function getToday() {
   var today = new Date()
   today.setDate(today.getDate() - 1)
@@ -91,4 +93,40 @@ export function getDate(date) {
       ? '0' + date.getMinutes()
       : date.getMinutes())
   return { time, dateShow, date }
+}
+
+export function getTransaction(from, to) {
+  debugger
+
+  var dep = 0
+  var wd = 0
+  var config = {
+    method: 'get',
+    url:
+      'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token'),
+    },
+    params: {
+      query: `[{"$match":{"createAt":{"$gte":"${from}","$lt":"${to}"}}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+    },
+  }
+  axios(config)
+    .then(function (response) {
+      var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
+      dep =
+        [res.find((o) => o.type === 'DEP')][0] === undefined
+          ? 0
+          : [res.find((o) => o.type === 'DEP')].length
+      wd =
+        [res.find((o) => o.type === 'W/D')][0] === undefined
+          ? 0
+          : [res.find((o) => o.type === 'W/D')].length
+      debugger
+    })
+    .catch(function (error) {
+      debugger
+    })
+  console.log(wd, dep)
+  return { wd, dep }
 }

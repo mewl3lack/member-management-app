@@ -26,6 +26,7 @@ import {
   renderDateTime,
   statusTemplate,
   getDate,
+  getTransaction,
 } from './function'
 
 export function StatusTemplate({ string }) {
@@ -98,6 +99,21 @@ export default function DashBorad() {
       width: 100,
     },
   ]
+  const dataBarChart = {
+    labels: ['1-7', '8-14', '15-21', '22-31'],
+    datasets: [
+      {
+        label: 'Withdraw',
+        data: [12, 19, 3, 5],
+        backgroundColor: '#E52E55',
+      },
+      {
+        label: 'Deposit',
+        data: [2, 3, 20, 30],
+        backgroundColor: '#23C19A',
+      },
+    ],
+  }
   const [datatable, setDatatable] = React.useState(
     <DataTable
       datatable={
@@ -148,7 +164,7 @@ export default function DashBorad() {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
       params: {
-        query: `[{"$match":{"createAt":{"$gte":"${'2021-07-05'}","$lt":"${to}"}}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+        query: `[{"$match":{"createAt":{"$gte":"${from}","$lt":"${to}"}}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       },
     }
     axios(config)
@@ -161,7 +177,7 @@ export default function DashBorad() {
         setTodayDEP(
           Number(_.filter(response.data.result, { type: 'DEP' }).length),
         )
-        setPieChart(res)
+        // setPieChart(res)
         setDatatable(
           <DataTable
             datatable={dataTransaction}
@@ -176,8 +192,10 @@ export default function DashBorad() {
           severity: 'error',
           string: `can not get transaction log`,
         })
+        window.location.href = '/'
       })
   }
+
   function setPieChart(res) {
     completed =
       [res.find((o) => o.status === 'COMPLETED')][0] === undefined
@@ -468,13 +486,13 @@ export default function DashBorad() {
         </Grid>
       </Grid>
       <Grid container spacing={3} clasNsame={classes.chartList}>
-        <Grid item xs={12} sm={12} md={7}>
+        {/* <Grid item xs={12} sm={12} md={7}>
           <Card variant="outlined" className={classes.pieDetail}>
             <Typography variant="h6" color="primary">
-              Payment issues
+              Payment Type
             </Typography>
             <CardContent>
-              <BarChart />
+              <BarChart data={dataBarChart} />
             </CardContent>
           </Card>
         </Grid>
@@ -485,7 +503,7 @@ export default function DashBorad() {
             </Typography>
             <CardContent>{pie}</CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12} sm={12} md={12}>
           <Card
             variant="outlined"

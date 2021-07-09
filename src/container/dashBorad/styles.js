@@ -112,4 +112,12 @@ export const useStyles = makeStyles((theme) => ({
   dataTableBG: {
     // background: '#f0f7ff !important',
   },
+  pieSubDetail: {
+    [theme.breakpoints.down('sm')]: {
+      height: '240px',
+    },
+    [theme.breakpoints.up('md')]: {
+      height: '390px',
+    },
+  },
 }))
