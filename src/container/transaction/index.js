@@ -47,6 +47,7 @@ export function StatusTemplate({ string }) {
 export default function User() {
   const classes = useStyles()
   let rows = []
+  let data = {}
   let columns = [
     {
       label: 'Tel.',
@@ -81,14 +82,12 @@ export default function User() {
     {
       label: 'Amount',
       field: 'amount',
-      sort: 'disabled',
     },
     {
       label: 'Create At',
       field: 'date',
       sort: 'asc',
       width: 100,
-      sort: 'disabled',
     },
     {
       label: 'Status',
@@ -97,10 +96,13 @@ export default function User() {
       width: 100,
     },
   ]
-  const [datatable, setDatatable] = React.useState({
-    columns,
-    rows: getskeletonTransaction(),
-  })
+  const [datatable, setDatatable] = React.useState(
+    <DataTable
+      datatable={(data = { columns, rows: getskeletonTransaction() })}
+      search={false}
+      onFunction={sortCustom}
+    />,
+  )
 
   const [checkError, setError] = React.useState(false)
   const [snackBar, setSnackBar] = React.useState({
@@ -109,11 +111,6 @@ export default function User() {
   })
   const [value, setValue] = React.useState('a')
 
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-  ]
   React.useEffect(() => {
     getDataFromAPI('All')
   }, [])
@@ -128,10 +125,13 @@ export default function User() {
   }
 
   const getDataFromAPI = (type) => {
-    setDatatable({
-      columns,
-      rows: getskeletonTransaction(),
-    })
+    setDatatable(
+      <DataTable
+        datatable={(data = { columns, rows: getskeletonTransaction() })}
+        search={false}
+        onFunction={sortCustom}
+      />,
+    )
     if (type === 'All') {
       var params = {
         query: `
@@ -157,6 +157,9 @@ export default function User() {
       .then(function (response) {
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
+        setDatatable(
+          <DataTable datatable={data} search={false} onFunction={sortCustom} />,
+        )
       })
       .catch(function (error) {
         setError(true)
@@ -196,8 +199,15 @@ export default function User() {
           bank_acc_vendor_destination: dataItems[i].bank_acc_vendor_destination,
           bank_acc_no_destination: dataItems[i].bank_acc_no_destination,
           amount: dataItems[i].amount,
-
           date: renderDateTime(dateShow, time),
+          dateForSearch: dateShow,
+          timeForSearch: time,
+          statusForSort:
+            dataItems[i].status === 'COMPLETED'
+              ? 'Completed'
+              : dataItems[i].status === 'PENDING'
+              ? 'Pending'
+              : 'Failed',
           Status: (
             <StatusTemplate
               string={
@@ -212,10 +222,10 @@ export default function User() {
         })
       }
 
-      setDatatable({
+      data = {
         columns,
         rows,
-      })
+      }
     }
   }
 
@@ -237,6 +247,39 @@ export default function User() {
   }
 
   //    call 1 sec
+  function sortCustom(value) {
+    if (value.column === 'Status') {
+      setDatatable(
+        <DataTable
+          datatable={
+            (data = {
+              columns,
+              rows: _.orderBy(data.rows, ['statusForSort'], [value.direction]),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
+    } else if (value.column === 'date') {
+      setDatatable(
+        <DataTable
+          datatable={
+            (data = {
+              columns,
+              rows: _.orderBy(
+                data.rows,
+                ['dateForSearch', 'timeForSearch'],
+                [value.direction, value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
+    }
+  }
 
   return (
     <Grid container spacing={3}>
@@ -263,43 +306,15 @@ export default function User() {
                 <Tab label="Deposit" value="d" />
               </Tabs>
             </Grid>
-            <Grid item xs={6} sm={6} md={6}>
-              {/* <Autocomplete
-                id="combo-box-demo"
-                PaperComponent={({ children }) => (
-                  <Paper style={{ background: '#ffffff' }}>{children}</Paper>
-                )}
-                options={top100Films}
-                getOptionLabel={(option) => option.title}
-                style={{ width: 300 }}
-                disableClearable
-                renderInput={(params) => (
-                  <TextField {...params} label="Combo box" variant="outlined" />
-                )}
-              /> */}
-            </Grid>
+            <Grid item xs={6} sm={6} md={6}></Grid>
           </Grid>
           <Card className={classes.root} variant="outlined">
-            <TabPanel value="a">
-              <DataTable
-                datatable={datatable}
-                search={false}
-                type={'nonBorder'}
-              />
-            </TabPanel>
+            <TabPanel value="a">{datatable}</TabPanel>
             <TabPanel value="w">
-              <DataTable
-                datatable={datatable}
-                search={false}
-                type={'nonBorder'}
-              />
+              <DataTable datatable={datatable} search={false} />
             </TabPanel>
             <TabPanel value="d">
-              <DataTable
-                datatable={datatable}
-                search={false}
-                type={'nonBorder'}
-              />
+              <DataTable datatable={datatable} search={false} />
             </TabPanel>
           </Card>
         </TabContext>

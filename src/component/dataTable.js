@@ -192,6 +192,7 @@ export default function TopSearchSelect({
     <MDBDataTable
       entries={10}
       pagesAmount={4}
+      responsive
       data={datatable}
       pagingtop={'true'}
       searchtop={'true'}

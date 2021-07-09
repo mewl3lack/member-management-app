@@ -60,6 +60,7 @@ export default function User() {
     { title: 'other', value: 'OTHER' },
   ]
   let rows = []
+  let dataMain = {}
   let columns = [
     {
       label: 'Name',
@@ -106,10 +107,16 @@ export default function User() {
       sort: 'disabled',
     },
   ]
-  const [datatable, setDatatable] = React.useState({
-    columns,
-    rows: getskeletonUserList(),
-  })
+
+  const [datatable, setDatatable] = React.useState(
+    <DataTable
+      datatable={(dataMain = { columns, rows: getskeletonUserList() })}
+      search={false}
+      onFunction={sortCustom}
+      type={'border'}
+    />,
+  )
+
   const [createStatus, setCreateStatus] = React.useState(false)
   const [data, setData] = React.useState({
     tel: '',
@@ -131,7 +138,6 @@ export default function User() {
     string: '',
     severity: '',
   })
-  const [customDatable, setDataTable] = React.useState()
 
   const closeDialogEdit = () => {
     setStatusEdit(false)
@@ -248,6 +254,14 @@ export default function User() {
       .then(function (response) {
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
+        setDatatable(
+          <DataTable
+            datatable={dataMain}
+            search={false}
+            onFunction={sortCustom}
+            type={'border'}
+          />,
+        )
       })
       .catch(function (error) {
         console.log(error)
@@ -298,10 +312,10 @@ export default function User() {
           ),
         })
       }
-      setDatatable({
+      dataMain = {
         columns,
         rows,
-      })
+      }
     }
   }
 
@@ -420,17 +434,41 @@ export default function User() {
 
   function sortCustom(value) {
     if (value.column === 'date') {
-      console.log(datatable.rows)
-      setDatatable({
-        columns,
-        rows: _.orderBy(datatable.rows, ['dateForSearch'], [value.direction]),
-      })
-      console.log(datatable.rows)
+      setDatatable(
+        <DataTable
+          datatable={
+            (dataMain = {
+              columns,
+              rows: _.orderBy(
+                dataMain.rows,
+                ['dateForSearch', 'timeForSearch'],
+                [value.direction, value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+          type={'border'}
+        />,
+      )
     } else if (value.column === 'Status') {
-      setDatatable({
-        columns,
-        rows: _.orderBy(datatable.rows, ['statusForSearch'], [value.direction]),
-      })
+      setDatatable(
+        <DataTable
+          datatable={
+            (dataMain = {
+              columns,
+              rows: _.orderBy(
+                dataMain.rows,
+                ['statusForSearch'],
+                [value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+          type={'border'}
+        />,
+      )
     }
   }
 
@@ -519,12 +557,7 @@ export default function User() {
             ) : (
               ''
             )}
-            <DataTable
-              datatable={datatable}
-              search={false}
-              type={'border'}
-              onFunction={sortCustom}
-            />
+            {datatable}
           </CardContent>
           <AlertSnackBar
             status={checkError}

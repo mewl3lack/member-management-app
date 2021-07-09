@@ -54,6 +54,7 @@ export default function DashBorad() {
   const classes = useStyles()
   const [period, setPeriod] = React.useState('today')
   let rowsTransaction = []
+  let dataTransaction = {}
   let columns = [
     {
       label: 'Tel.',
@@ -63,39 +64,32 @@ export default function DashBorad() {
       label: 'Type.',
       field: 'type',
       sort: 'asc',
-      sort: 'disabled',
     },
     {
       label: 'Origin Bank',
       field: 'bank_acc_vendor_origin',
-      sort: 'disabled',
     },
     {
       label: 'Origin Bank Acc no.',
       field: 'bank_acc_no_origin',
-      sort: 'disabled',
     },
     {
       label: 'Destination bank ',
       field: 'bank_acc_vendor_destination',
-      sort: 'disabled',
     },
     {
       label: 'Destination Bank Acc no.',
       field: 'bank_acc_no_destination',
-      sort: 'disabled',
     },
     {
       label: 'Amount',
       field: 'amount',
-      sort: 'disabled',
     },
     {
       label: 'Create At',
-      field: 'date',
+      field: 'dateTransaction',
       sort: 'asc',
       width: 100,
-      sort: 'disabled',
     },
     {
       label: 'Status',
@@ -104,9 +98,15 @@ export default function DashBorad() {
       width: 100,
     },
   ]
-  const [datatable, setDatatable] = React.useState({
-    columns,
-  })
+  const [datatable, setDatatable] = React.useState(
+    <DataTable
+      datatable={
+        (dataTransaction = { columns, rows: getskeletonTransaction() })
+      }
+      search={false}
+    />,
+  )
+
   const [snackBar, setSnackBar] = React.useState({
     string: '',
     severity: '',
@@ -117,7 +117,12 @@ export default function DashBorad() {
   const [todayTransaction, setTodayTransaction] = React.useState(0)
   const [todayWD, setTodayWD] = React.useState(0)
   const [todayDEP, setTodayDEP] = React.useState(0)
+  const [pie, setPie] = React.useState()
 
+  var completed = 0
+  var failed = 0
+  var pending = 0
+  var all = 0
   React.useEffect(() => {
     getTransactionFromAPI(getToday(), getYesterday())
     getUserFromAPI(getToday(), getYesterday())
@@ -126,10 +131,15 @@ export default function DashBorad() {
   // transaction
 
   const getTransactionFromAPI = (from, to) => {
-    setDatatable({
-      columns,
-      rows: getskeletonTransaction(),
-    })
+    setDatatable(
+      <DataTable
+        datatable={
+          (dataTransaction = { columns, rows: getskeletonTransaction() })
+        }
+        search={false}
+        onFunction={sortCustom}
+      />,
+    )
     var config = {
       method: 'get',
       url:
@@ -151,9 +161,16 @@ export default function DashBorad() {
         setTodayDEP(
           Number(_.filter(response.data.result, { type: 'DEP' }).length),
         )
+        setPieChart(res)
+        setDatatable(
+          <DataTable
+            datatable={dataTransaction}
+            search={false}
+            onFunction={sortCustom}
+          />,
+        )
       })
       .catch(function (error) {
-        debugger
         setError(true)
         setSnackBar({
           severity: 'error',
@@ -161,7 +178,29 @@ export default function DashBorad() {
         })
       })
   }
-
+  function setPieChart(res) {
+    completed =
+      [res.find((o) => o.status === 'COMPLETED')][0] === undefined
+        ? 0
+        : [res.find((o) => o.status === 'COMPLETED')].length
+    failed =
+      [res.find((o) => o.status === 'FAILED')][0] === undefined
+        ? 0
+        : [res.find((o) => o.status === 'FAILED')].length
+    pending =
+      [res.find((o) => o.status === 'PENDING')][0] === undefined
+        ? 0
+        : [res.find((o) => o.status === 'PENDING')].length
+    all = completed + failed + pending
+    setPie(
+      <PieChart
+        completed={completed}
+        failed={failed}
+        pending={pending}
+        all={all}
+      />,
+    )
+  }
   function getDataObject(dataItems) {
     if (dataItems !== undefined) {
       let len = dataItems.length
@@ -174,15 +213,22 @@ export default function DashBorad() {
               string={dataItems[i].type === 'DEP' ? 'DEP' : 'W/D'}
             />
           ),
+          typeForSort: dataItems[i].type === 'DEP' ? 'DEP' : 'W/D',
           bank_acc_vendor_origin: dataItems[i].bank_acc_vendor_origin,
           bank_acc_no_origin: dataItems[i].bank_acc_no_origin,
           bank_acc_vendor_destination: dataItems[i].bank_acc_vendor_destination,
           bank_acc_no_destination: dataItems[i].bank_acc_no_destination,
           amount: dataItems[i].amount,
-          date: renderDateTime(
+          dateTransaction: renderDateTime(
             getDate(dataItems[i].createAt).dateShow,
             getDate(dataItems[i].createAt).time,
           ),
+          statusForSort:
+            dataItems[i].status === 'COMPLETED'
+              ? 'Completed'
+              : dataItems[i].status === 'PENDING'
+              ? 'Pending'
+              : 'Failed',
           Status: statusTemplate(
             dataItems[i].status === 'COMPLETED'
               ? 'Completed'
@@ -192,10 +238,10 @@ export default function DashBorad() {
           ),
         })
       }
-      setDatatable({
+      dataTransaction = {
         columns,
         rows: rowsTransaction,
-      })
+      }
     }
   }
   // end
@@ -232,11 +278,17 @@ export default function DashBorad() {
     },
   ]
   let rowsUser = []
+  let dataUSer = {}
 
-  const [datatableUser, setDatatableUser] = React.useState({
-    columns: columnsUser,
-    rows: getskeletonUserList(),
-  })
+  const [datatableUser, setDatatableUser] = React.useState(
+    <DataTable
+      datatable={
+        (dataUSer = { columns: columnsUser, rows: getskeletonUserList() })
+      }
+      search={false}
+      onFunction={sortCustom}
+    />,
+  )
 
   const getUserFromAPI = () => {
     var config = {
@@ -251,6 +303,13 @@ export default function DashBorad() {
       .then(function (response) {
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getUserObject(res)
+        setDatatableUser(
+          <DataTable
+            datatable={(dataUSer = { columns: columnsUser, rows: rowsUser })}
+            search={false}
+            onFunction={sortCustom}
+          />,
+        )
       })
       .catch(function (error) {
         console.log(error)
@@ -275,26 +334,82 @@ export default function DashBorad() {
           timeForSearch: getDate(dataItems[i].createAt).time,
         })
       }
-      setDatatableUser({
-        columns: columnsUser,
-        rows: rowsUser,
-      })
+      dataUSer = { columns: columnsUser, rows: rowsUser }
     }
   }
 
   // end
 
   function sortCustom(value) {
-    alert(value.direction)
     if (value.column === 'date') {
-      setDatatableUser({
-        columns: columnsUser,
-        rows: _.orderBy(
-          datatableUser.rows,
-          ['dateForSearch', 'timeForSearch'],
-          [value.direction, value.direction],
-        ),
-      })
+      setDatatableUser(
+        <DataTable
+          datatable={
+            (dataUSer = {
+              columns: columnsUser,
+              rows: _.orderBy(
+                dataUSer.rows,
+                ['dateForSearch', 'timeForSearch'],
+                [value.direction, value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
+    } else if (value.column === 'Status') {
+      setDatatable(
+        <DataTable
+          datatable={
+            (dataTransaction = {
+              columns,
+              rows: _.orderBy(
+                dataTransaction.rows,
+                ['statusForSort'],
+                [value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
+    } else if (value.column === 'type') {
+      alert(value.direction)
+      setDatatable(
+        <DataTable
+          datatable={
+            (dataTransaction = {
+              columns,
+              rows: _.orderBy(
+                dataTransaction.rows,
+                ['typeForSort'],
+                [value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
+    } else if (value.column === 'dateTransaction') {
+      setDatatable(
+        <DataTable
+          datatable={
+            (dataTransaction = {
+              columns,
+              rows: _.orderBy(
+                dataTransaction.rows,
+                ['dateForSearch', 'timeForSearch'],
+                [value.direction, value.direction],
+              ),
+            })
+          }
+          search={false}
+          onFunction={sortCustom}
+        />,
+      )
     }
   }
 
@@ -353,8 +468,11 @@ export default function DashBorad() {
         </Grid>
       </Grid>
       <Grid container spacing={3} clasNsame={classes.chartList}>
-        {/* <Grid item xs={12} sm={12} md={7}>
+        <Grid item xs={12} sm={12} md={7}>
           <Card variant="outlined" className={classes.pieDetail}>
+            <Typography variant="h6" color="primary">
+              Payment issues
+            </Typography>
             <CardContent>
               <BarChart />
             </CardContent>
@@ -363,13 +481,11 @@ export default function DashBorad() {
         <Grid item xs={12} sm={12} md={5}>
           <Card variant="outlined" className={classes.pieDetail}>
             <Typography variant="h6" color="primary">
-              Payment issues
+              Payment Status
             </Typography>
-            <CardContent>
-              <PieChart />
-            </CardContent>
+            <CardContent>{pie}</CardContent>
           </Card>
-        </Grid> */}
+        </Grid>
         <Grid item xs={12} sm={12} md={12}>
           <Card
             variant="outlined"
@@ -378,9 +494,7 @@ export default function DashBorad() {
             <Typography variant="h6" color="primary">
               New Transaction{' '}
             </Typography>
-            <CardContent>
-              <DataTable datatable={datatable} search={false} />
-            </CardContent>
+            <CardContent>{datatable} </CardContent>
           </Card>
         </Grid>
         <Grid item xs={12} sm={12} md={12}>
@@ -391,13 +505,7 @@ export default function DashBorad() {
             <Typography variant="h6" color="primary">
               New 20 Users{' '}
             </Typography>
-            <CardContent>
-              <DataTable
-                datatable={datatableUser}
-                search={false}
-                onFunction={sortCustom}
-              />
-            </CardContent>
+            <CardContent>{datatableUser}</CardContent>
           </Card>
         </Grid>
       </Grid>
