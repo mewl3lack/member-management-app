@@ -207,7 +207,7 @@ export default function User() {
     var config = {
       method: 'post',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/addMember',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/addMember',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -265,7 +265,7 @@ export default function User() {
     var config = {
       method: 'get',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/getList',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/getList',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
@@ -432,7 +432,7 @@ export default function User() {
     var config = {
       method: 'put',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/updateMember',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/updateMember',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/x-www-form-urlencoded',

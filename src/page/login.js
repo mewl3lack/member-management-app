@@ -41,7 +41,7 @@ export default function Login() {
         redirect: 'follow',
       }
       fetch(
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/employee/login',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/employee/login',
         requestOptions,
       )
         .then((response) => response.text())

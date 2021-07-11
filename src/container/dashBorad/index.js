@@ -159,7 +159,7 @@ export default function DashBorad() {
     var config = {
       method: 'get',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
@@ -320,7 +320,7 @@ export default function DashBorad() {
     var config = {
       method: 'get',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/member/getList',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/getList',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },

@@ -147,7 +147,7 @@ export default function User() {
     var config = {
       method: 'get',
       url:
-        'http://ec2-18-117-124-197.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
+        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
