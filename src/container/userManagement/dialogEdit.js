@@ -53,7 +53,7 @@ export default function DialogDelete(props) {
 
     axios(config)
       .then(function (response) {
-        if (response !== []) {
+        if (response !== [] && response.data.result[0] !== undefined) {
           if (response.data.result[0].social_source !== undefined) {
             var value =
               response.data.result[0].social_source === 'FB'
@@ -112,7 +112,21 @@ export default function DialogDelete(props) {
         }
       })
       .catch(function (error) {
-        console.log(error)
+        debugger
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: 'can not get member by id',
+          })
+        }
       })
   }
   const clearState = () => {

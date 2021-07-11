@@ -226,14 +226,23 @@ export default function User() {
         }
       })
       .catch(function (error) {
-        setLoader(false)
-        setError(true)
-        setSnackBar({
-          severity: 'error',
-          string: error.message.includes('500')
-            ? 'Telephone no. exists.'
-            : 'Can not create member ,please check your data',
-        })
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setLoader(false)
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: error.message.includes('500')
+              ? 'Telephone no. exists.'
+              : 'Can not create member ,please check your data',
+          })
+        }
       })
   }
 
@@ -264,7 +273,20 @@ export default function User() {
         )
       })
       .catch(function (error) {
-        console.log(error)
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `can not get member list `,
+          })
+        }
       })
   }
 
@@ -386,7 +408,7 @@ export default function User() {
     var axios = require('axios')
     var qs = require('qs')
     var data = qs.stringify({
-      status: '0',
+      status: 0,
       id: id,
     })
     var config = {
@@ -406,7 +428,20 @@ export default function User() {
         closeDialog()
       })
       .catch(function (error) {
-        console.log(error)
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: 'can not delete  member from list',
+          })
+        }
       })
   }
 

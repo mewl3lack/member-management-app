@@ -155,6 +155,7 @@ export default function User() {
     }
     axios(config)
       .then(function (response) {
+        debugger
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
         setDatatable(
@@ -162,11 +163,20 @@ export default function User() {
         )
       })
       .catch(function (error) {
-        setError(true)
-        setSnackBar({
-          severity: 'error',
-          string: `can not get transaction log`,
-        })
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `can not get transaction `,
+          })
+        }
       })
   }
 

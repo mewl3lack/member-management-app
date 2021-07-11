@@ -187,12 +187,20 @@ export default function DashBorad() {
         )
       })
       .catch(function (error) {
-        setError(true)
-        setSnackBar({
-          severity: 'error',
-          string: `can not get transaction log`,
-        })
-        window.location.href = '/'
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `can not get transaction log`,
+          })
+        }
       })
   }
 
@@ -330,7 +338,20 @@ export default function DashBorad() {
         )
       })
       .catch(function (error) {
-        console.log(error)
+        if (JSON.stringify(error).includes('403')) {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `token expire`,
+          })
+          window.location.href = '/'
+        } else {
+          setError(true)
+          setSnackBar({
+            severity: 'error',
+            string: `can not get member list`,
+          })
+        }
       })
   }
 
