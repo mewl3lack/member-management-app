@@ -167,6 +167,7 @@ export default function DialogDelete(props) {
     }
   }
   const updateMember = () => {
+    props.setLoader(true)
     var axios = require('axios')
     var qs = require('qs')
     var data = qs.stringify({
@@ -198,8 +199,11 @@ export default function DialogDelete(props) {
         })
         props.onCloseDialog()
         props.getDataFromAPI()
+        props.setLoader(false)
       })
       .catch(function (error) {
+        props.setLoader(false)
+
         setError(true)
         setSnackBar({
           severity: 'error',
@@ -229,7 +233,7 @@ export default function DialogDelete(props) {
         </DialogTitle>
         <DialogContent>
           {editData.id === '' ? (
-            <SkeletonForm />
+            <SkeletonForm status={props.status} />
           ) : (
             <EditUser
               data={editData}
@@ -240,6 +244,7 @@ export default function DialogDelete(props) {
               optionSource={props.optionSource}
               optionBank={props.optionBank}
               type={'edit'}
+              status={props.status}
             />
           )}
         </DialogContent>

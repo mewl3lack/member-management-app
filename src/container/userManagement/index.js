@@ -21,6 +21,8 @@ import { CreateIntervalCall } from './interval'
 import _ from 'lodash'
 import Collapse from '@material-ui/core/Collapse'
 import MoneyOffIcon from '@material-ui/icons/MoneyOff'
+import SearchIcon from '@material-ui/icons/Search'
+import Edit from '@material-ui/icons/Edit'
 export function StatusTemplate({ string }) {
   const classes = useStyles()
   return (
@@ -128,6 +130,7 @@ export default function User() {
     about: '',
     line: '',
   })
+  const [checkActive, setCheckActive] = React.useState()
   const [checkValidate, setCheckValidate] = React.useState(false)
   const [loadingStatus, setLoader] = React.useState(false)
   const [checkError, setError] = React.useState(false)
@@ -251,6 +254,14 @@ export default function User() {
   }, [])
 
   const getDataFromAPI = () => {
+    setDatatable(
+      <DataTable
+        datatable={(dataMain = { columns, rows: getskeletonUserList() })}
+        search={false}
+        onFunction={sortCustom}
+        type={'border'}
+      />,
+    )
     var config = {
       method: 'get',
       url:
@@ -349,42 +360,49 @@ export default function User() {
           color="primary"
           className={classes.button}
           disableElevation
-          disabled={!active}
+          // disabled={!active}
           onClick={(e) => {
+            setCheckActive(active)
             setStatusEdit(true)
             setUserID(id)
           }}
         >
-          <EditIcon />
+          {!active ? <SearchIcon /> : <EditIcon />}
         </Button>{' '}
-        <Button
-          variant="outlined"
-          style={{
-            color: !active ? '' : '#D43E3E',
-            border: !active ? '' : '1px solid #D43E3E',
-          }}
-          className={classes.button}
-          disableElevation
-          disabled={!active}
-          onClick={(e) => {
-            setUserID(id)
-            setStatusDialog(true)
-          }}
-        >
-          <DeleteIcon />
-        </Button>{' '}
-        <Button
-          variant="outlined"
-          style={{
-            color: !active ? '' : '#fabf3e',
-            border: !active ? '' : '1px solid #fabf3e',
-          }}
-          className={classes.button}
-          disableElevation
-          disabled={true}
-        >
-          <MoneyOffIcon />
-        </Button>{' '}
+        {!active ? (
+          ''
+        ) : (
+          <React.Fragment>
+            <Button
+              variant="outlined"
+              style={{
+                color: !active ? '' : '#D43E3E',
+                border: !active ? '' : '1px solid #D43E3E',
+              }}
+              className={classes.button}
+              disableElevation
+              disabled={!active}
+              onClick={(e) => {
+                setUserID(id)
+                setStatusDialog(true)
+              }}
+            >
+              <DeleteIcon />
+            </Button>
+            <Button
+              variant="outlined"
+              style={{
+                color: !active ? '' : '#fabf3e',
+                border: !active ? '' : '1px solid #fabf3e',
+              }}
+              className={classes.button}
+              disableElevation
+              disabled={true}
+            >
+              <MoneyOffIcon />
+            </Button>
+          </React.Fragment>
+        )}
       </div>
     )
   }
@@ -527,6 +545,8 @@ export default function User() {
         optionSource={optionSource}
         optionBank={optionBank}
         getDataFromAPI={getDataFromAPI}
+        status={checkActive}
+        setLoader={setLoader}
       />
       <Grid item xs={12} sm={12} md={12}>
         <Card className={classes.root} variant="outlined">
@@ -577,6 +597,7 @@ export default function User() {
               createMember={onSubmit}
               optionSource={optionSource}
               optionBank={optionBank}
+              status={true}
             />
           </Collapse>
 
