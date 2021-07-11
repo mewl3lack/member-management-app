@@ -10,6 +10,7 @@ export function getskeletonUserList() {
       tel: <Skeleton animation="wave" />,
       date: <Skeleton animation="wave" />,
       action: <Skeleton animation="wave" />,
+      Status: <Skeleton animation="wave" />,
     })
   }
   return row
@@ -27,6 +28,7 @@ export function getskeletonTransaction() {
       amount: <Skeleton animation="wave" />,
       date: <Skeleton animation="wave" />,
       Status: <Skeleton animation="wave" />,
+      dateTransaction: <Skeleton animation="wave" />,
     })
   }
   return row

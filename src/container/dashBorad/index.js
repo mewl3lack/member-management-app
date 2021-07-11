@@ -359,19 +359,21 @@ export default function DashBorad() {
     if (dataItems !== undefined) {
       setNewUser(dataItems.length)
       for (let i = 0; i < 20; i++) {
-        rowsUser.push({
-          name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
-          Bank: dataItems[i].bank_acc_vendor,
-          BankAccountNumber: dataItems[i].bank_acc_no,
-          tel: dataItems[i].tel_no,
-          BankAccountNumber: dataItems[i].bank_acc_no,
-          date: renderDateTime(
-            getDate(dataItems[i].createAt).dateShow,
-            getDate(dataItems[i].createAt).time,
-          ),
-          dateForSearch: getDate(dataItems[i].createAt).dateShow,
-          timeForSearch: getDate(dataItems[i].createAt).time,
-        })
+        if (dataItems[i].status === 1) {
+          rowsUser.push({
+            name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
+            Bank: dataItems[i].bank_acc_vendor,
+            BankAccountNumber: dataItems[i].bank_acc_no,
+            tel: dataItems[i].tel_no,
+            BankAccountNumber: dataItems[i].bank_acc_no,
+            date: renderDateTime(
+              getDate(dataItems[i].createAt).dateShow,
+              getDate(dataItems[i].createAt).time,
+            ),
+            dateForSearch: getDate(dataItems[i].createAt).dateShow,
+            timeForSearch: getDate(dataItems[i].createAt).time,
+          })
+        }
       }
       dataUSer = { columns: columnsUser, rows: rowsUser }
     }
