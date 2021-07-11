@@ -18,7 +18,6 @@ export default function Login() {
   })
   const [error, setError] = useState(false)
   const [messageError, setMsgError] = useState(' Invalid Username or Password')
-
   const handleChange = (e) => {
     setData((prev) => ({
       ...prev,
@@ -41,7 +40,7 @@ export default function Login() {
         redirect: 'follow',
       }
       fetch(
-        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/employee/login',
+        `${process.env.REACT_APP_BASE_URL}/api/employee/login`,
         requestOptions,
       )
         .then((response) => response.text())

@@ -42,8 +42,7 @@ export default function DialogDelete(props) {
     var axios = require('axios')
     var config = {
       method: 'get',
-      url:
-        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/getList',
+      url: `${process.env.REACT_APP_BASE_URL}/api/member/getList`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'multipart/form-data',
@@ -182,8 +181,7 @@ export default function DialogDelete(props) {
     })
     var config = {
       method: 'put',
-      url:
-        'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/member/updateMember',
+      url: `${process.env.REACT_APP_BASE_URL}/api/member/updateMember`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
         'Content-Type': 'application/x-www-form-urlencoded',

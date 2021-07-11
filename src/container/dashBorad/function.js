@@ -100,8 +100,7 @@ export function getTransaction(from, to) {
   var wd = 0
   var config = {
     method: 'get',
-    url:
-      'http://ec2-3-22-249-177.us-east-2.compute.amazonaws.com/api/transactionLog/getList',
+    url: `${process.env.REACT_APP_BASE_URL}/api/transactionLog/getList`,
     headers: {
       Authorization: 'Bearer ' + localStorage.getItem('token'),
     },
