@@ -155,7 +155,6 @@ export default function User() {
     }
     axios(config)
       .then(function (response) {
-        debugger
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
         getDataObject(res)
         setDatatable(

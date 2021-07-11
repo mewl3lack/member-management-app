@@ -96,8 +96,6 @@ export function getDate(date) {
 }
 
 export function getTransaction(from, to) {
-  debugger
-
   var dep = 0
   var wd = 0
   var config = {
@@ -122,11 +120,8 @@ export function getTransaction(from, to) {
         [res.find((o) => o.type === 'W/D')][0] === undefined
           ? 0
           : [res.find((o) => o.type === 'W/D')].length
-      debugger
     })
-    .catch(function (error) {
-      debugger
-    })
+    .catch(function (error) {})
   console.log(wd, dep)
   return { wd, dep }
 }

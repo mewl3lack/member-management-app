@@ -112,7 +112,6 @@ export default function DialogDelete(props) {
         }
       })
       .catch(function (error) {
-        debugger
         if (JSON.stringify(error).includes('403')) {
           setError(true)
           setSnackBar({
