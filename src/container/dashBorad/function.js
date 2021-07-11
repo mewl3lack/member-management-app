@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 export function getToday() {
   var today = new Date()
-  today.setDate(today.getDate() - 1)
+  today.setDate(today.getDate() + 1)
 
   return (
     today.getFullYear() +
@@ -18,6 +18,8 @@ export function getToday() {
 }
 export function getYesterday() {
   var today = new Date()
+  today.setDate(today.getDate())
+
   return (
     today.getFullYear() +
     '-' +

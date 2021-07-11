@@ -10,7 +10,7 @@ export function getskeletonUserList() {
       tel: <Skeleton animation="wave" />,
       date: <Skeleton animation="wave" />,
       action: <Skeleton animation="wave" />,
-      Status: <Skeleton animation="wave" />,
+      // Status: <Skeleton animation="wave" />,
     })
   }
   return row

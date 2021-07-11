@@ -140,7 +140,7 @@ export default function DashBorad() {
   var pending = 0
   var all = 0
   React.useEffect(() => {
-    getTransactionFromAPI(getToday(), getYesterday())
+    getTransactionFromAPI(getYesterday(), getToday())
     getUserFromAPI(getToday(), getYesterday())
   }, [])
 
@@ -166,6 +166,9 @@ export default function DashBorad() {
         query: `[{"$match":{"createAt":{"$gte":"${from}","$lt":"${to}"}}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       },
     }
+    console.log(
+      `[{"$match":{"createAt":{"$gte":"${from}","$lt":"${to}"}}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+    )
     axios(config)
       .then(function (response) {
         var res = _.orderBy(response.data.result, ['createAt'], ['desc'])
@@ -194,6 +197,8 @@ export default function DashBorad() {
           })
           window.location.href = '/'
         } else {
+          console.log(error)
+
           setError(true)
           setSnackBar({
             severity: 'error',
@@ -203,36 +208,16 @@ export default function DashBorad() {
       })
   }
 
-  function setPieChart(res) {
-    completed =
-      [res.find((o) => o.status === 'COMPLETED')][0] === undefined
-        ? 0
-        : [res.find((o) => o.status === 'COMPLETED')].length
-    failed =
-      [res.find((o) => o.status === 'FAILED')][0] === undefined
-        ? 0
-        : [res.find((o) => o.status === 'FAILED')].length
-    pending =
-      [res.find((o) => o.status === 'PENDING')][0] === undefined
-        ? 0
-        : [res.find((o) => o.status === 'PENDING')].length
-    all = completed + failed + pending
-    setPie(
-      <PieChart
-        completed={completed}
-        failed={failed}
-        pending={pending}
-        all={all}
-      />,
-    )
-  }
   function getDataObject(dataItems) {
     if (dataItems !== undefined) {
       let len = dataItems.length
       setTodayTransaction(dataItems.length)
       for (let i = 0; i < len; i++) {
         rowsTransaction.push({
-          tel_no: dataItems[i].members[0].tel_no,
+          tel_no:
+            dataItems[i].members.length === 0
+              ? '-'
+              : dataItems[i].members[0].tel_no,
           type: (
             <StatusTemplate
               string={dataItems[i].type === 'DEP' ? 'DEP' : 'W/D'}
@@ -329,7 +314,7 @@ export default function DashBorad() {
         getUserObject(res)
         setDatatableUser(
           <DataTable
-            datatable={(dataUSer = { columns: columnsUser, rows: rowsUser })}
+            datatable={dataUSer}
             search={false}
             onFunction={sortCustom}
           />,
@@ -344,6 +329,7 @@ export default function DashBorad() {
           })
           window.location.href = '/'
         } else {
+          console.log(dataUSer)
           setError(true)
           setSnackBar({
             severity: 'error',
@@ -356,23 +342,23 @@ export default function DashBorad() {
   function getUserObject(dataItems) {
     if (dataItems !== undefined) {
       setNewUser(dataItems.length)
-      for (let i = 0; i < 20; i++) {
-        if (dataItems[i].status === 1) {
-          rowsUser.push({
-            name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
-            Bank: dataItems[i].bank_acc_vendor,
-            BankAccountNumber: dataItems[i].bank_acc_no,
-            tel: dataItems[i].tel_no,
-            BankAccountNumber: dataItems[i].bank_acc_no,
-            date: renderDateTime(
-              getDate(dataItems[i].createAt).dateShow,
-              getDate(dataItems[i].createAt).time,
-            ),
-            dateForSearch: getDate(dataItems[i].createAt).dateShow,
-            timeForSearch: getDate(dataItems[i].createAt).time,
-          })
-        }
+      var len = dataItems.length >= 20 ? 20 : dataItems.length
+      for (let i = 0; i < len; i++) {
+        rowsUser.push({
+          name: dataItems[i].first_name + ' ' + dataItems[i].last_name,
+          Bank: dataItems[i].bank_acc_vendor,
+          BankAccountNumber: dataItems[i].bank_acc_no,
+          tel: dataItems[i].tel_no,
+          BankAccountNumber: dataItems[i].bank_acc_no,
+          date: renderDateTime(
+            getDate(dataItems[i].createAt).dateShow,
+            getDate(dataItems[i].createAt).time,
+          ),
+          dateForSearch: getDate(dataItems[i].createAt).dateShow,
+          timeForSearch: getDate(dataItems[i].createAt).time,
+        })
       }
+
       dataUSer = { columns: columnsUser, rows: rowsUser }
     }
   }

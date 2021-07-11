@@ -196,7 +196,10 @@ export default function User() {
             ? '0' + date.getMinutes()
             : date.getMinutes())
         rows.push({
-          tel_no: dataItems[i].members[0].tel_no,
+          tel_no:
+            dataItems[i].members.length === 0
+              ? '-'
+              : dataItems[i].members[0].tel_no,
           type: (
             <StatusTemplate
               string={dataItems[i].type === 'DEP' ? 'DEP' : 'W/D'}
