@@ -321,12 +321,8 @@ export default function User() {
           </Grid>
           <Card className={classes.root} variant="outlined">
             <TabPanel value="a">{datatable}</TabPanel>
-            <TabPanel value="w">
-              <DataTable datatable={datatable} search={false} />
-            </TabPanel>
-            <TabPanel value="d">
-              <DataTable datatable={datatable} search={false} />
-            </TabPanel>
+            <TabPanel value="w">{datatable} </TabPanel>
+            <TabPanel value="d">{datatable} </TabPanel>
           </Card>
         </TabContext>
 
