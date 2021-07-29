@@ -236,13 +236,13 @@ export default function DashBorad() {
           statusForSort:
             dataItems[i].status === 'COMPLETED'
               ? 'Completed'
-              : dataItems[i].status === 'PENDING'
+              : dataItems[i].status === 'Pending'
               ? 'Pending'
               : 'Failed',
           Status: statusTemplate(
             dataItems[i].status === 'COMPLETED'
               ? 'Completed'
-              : dataItems[i].status === 'PENDING'
+              : dataItems[i].status === 'Pending'
               ? 'Pending'
               : 'Failed',
           ),

@@ -358,7 +358,6 @@ export default function User() {
           color="primary"
           className={classes.button}
           disableElevation
-          // disabled={!active}
           onClick={(e) => {
             setCheckActive(active)
             setStatusEdit(true)

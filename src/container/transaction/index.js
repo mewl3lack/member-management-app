@@ -19,10 +19,9 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import TabPanel from '@material-ui/lab/TabPanel'
 import TabContext from '@material-ui/lab/TabContext'
-import TextField from '@material-ui/core/TextField'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import Paper from '@material-ui/core/Paper'
+import DialogDelete from '../userManagement/dialogDelete'
 
+import CheckIcon from '@material-ui/icons/Check'
 export function StatusTemplate({ string }) {
   const classes = useStyles()
   return (
@@ -95,6 +94,12 @@ export default function User() {
       sort: 'asc',
       width: 100,
     },
+    {
+      label: 'Action',
+      field: 'action',
+      sort: 'asc',
+      width: 100,
+    },
   ]
   const [datatable, setDatatable] = React.useState(
     <DataTable
@@ -109,8 +114,13 @@ export default function User() {
     string: '',
     severity: '',
   })
-  const [value, setValue] = React.useState('a')
+  const [statusDialog, setStatusDialog] = React.useState(false)
+  const [transactionID, setTransactionID] = React.useState('')
 
+  const [value, setValue] = React.useState('a')
+  const closeDialog = () => {
+    setStatusDialog(false)
+  }
   React.useEffect(() => {
     getDataFromAPI('All')
   }, [])
@@ -195,6 +205,7 @@ export default function User() {
           (Number(date.getMinutes()) < 10
             ? '0' + date.getMinutes()
             : date.getMinutes())
+        debugger
         rows.push({
           tel_no:
             dataItems[i].members.length === 0
@@ -224,12 +235,13 @@ export default function User() {
               string={
                 dataItems[i].status === 'COMPLETED'
                   ? 'Completed'
-                  : dataItems[i].status === 'PENDING'
+                  : dataItems[i].status === 'Pending'
                   ? 'Pending'
                   : 'Failed'
               }
             />
           ),
+          action: renderAction(dataItems[i].status),
         })
       }
 
@@ -291,9 +303,34 @@ export default function User() {
       )
     }
   }
-
+  function renderAction(action) {
+    return (
+      <div>
+        {action === 'COMPLETED' ? (
+          '-'
+        ) : (
+          <Button
+            variant="outlined"
+            color="primary"
+            disableElevation
+            onClick={(e) => {
+              setStatusDialog(true)
+            }}
+          >
+            <CheckIcon />
+          </Button>
+        )}
+      </div>
+    )
+  }
   return (
     <Grid container spacing={3}>
+      <DialogDelete
+        deleteMember={''}
+        open={statusDialog}
+        id={transactionID}
+        onCloseDialog={closeDialog}
+      />
       <Grid item xs={12} sm={12} md={12}>
         <TabContext value={value}>
           <Grid container>

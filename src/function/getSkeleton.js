@@ -19,6 +19,7 @@ export function getskeletonTransaction() {
   let row = []
   for (let i = 0; i < 10; i++) {
     row.push({
+      action: <Skeleton animation="wave" />,
       tel_no: <Skeleton animation="wave" />,
       type: <Skeleton animation="wave" />,
       bank_acc_vendor_origin: <Skeleton animation="wave" />,
