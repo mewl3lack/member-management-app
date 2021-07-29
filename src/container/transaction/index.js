@@ -43,7 +43,7 @@ export function StatusTemplate({ string }) {
     </div>
   )
 }
-export default function User() {
+export default function User(props) {
   const classes = useStyles()
   let rows = []
   let data = {}
@@ -135,6 +135,7 @@ export default function User() {
   }
 
   const getDataFromAPI = (type) => {
+    console.log(props.uuid)
     setDatatable(
       <DataTable
         datatable={(data = { columns, rows: getskeletonTransaction() })}
@@ -142,15 +143,25 @@ export default function User() {
         onFunction={sortCustom}
       />,
     )
-    if (type === 'All') {
+    if (type === 'All' && props === undefined) {
       var params = {
         query: `
         [{"$match":{}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       }
-    } else {
+    } else if (type !== 'All' && props === undefined) {
       var params = {
         query: `
         [{"$match":{"type":"${type}"}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+      }
+    } else if (type === 'All' && props !== undefined) {
+      var params = {
+        query: `
+        [{"$match":{"user_member_id":"${props.uuid}"}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
+      }
+    } else if (type !== 'All' && props !== undefined) {
+      var params = {
+        query: `
+        [{"$match":{"type":"${type}","user_member_id":"${props.uuid}"}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       }
     }
 
@@ -205,7 +216,6 @@ export default function User() {
           (Number(date.getMinutes()) < 10
             ? '0' + date.getMinutes()
             : date.getMinutes())
-        debugger
         rows.push({
           tel_no:
             dataItems[i].members.length === 0

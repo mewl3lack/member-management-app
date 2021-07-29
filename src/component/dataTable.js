@@ -120,30 +120,6 @@ const useStyles = makeStyles((theme) => ({
             borderRadius: '0 30px 30px 0',
             border: 'none',
           },
-          // '&:nth-of-type(02)': {
-          //   width: '160px',
-          //   minWidth: '160px',
-          // },
-          // '&:nth-of-type(03)': {
-          //   width: '220px',
-          //   minWidth: '220px',
-          // },
-          // '&:nth-of-type(05)': {
-          //   width: '144px',
-          //   minWidth: '144px',
-          // },
-          // '&:nth-of-type(06)': {
-          //   width: '108px',
-          //   minWidth: '108px',
-          // },
-          // '&:nth-of-type(07)': {
-          //   width: 'calc(100% - 992px)',
-          //   minWidth: '96px',
-          // },
-          // '&:nth-of-type(04),&:nth-of-type(08)': {
-          //   width: '88px',
-          //   minWidth: '88px',
-          // },
         },
       },
       '& tbody': {

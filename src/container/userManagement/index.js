@@ -12,17 +12,22 @@ import axios from 'axios'
 import qs from 'qs'
 import Loader from '../../component/loaderBackdrop'
 import AlertSnackBar from '../../component/snackBarAlert'
-import { getskeletonUserList } from '../../function/getSkeleton'
+import {
+  getskeletonUserList,
+  getskeletonTransaction,
+} from '../../function/getSkeleton'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import DialogDelete from './dialogDelete'
 import DialogEdit from './dialogEdit'
+import DialogTransactiont from './dialogTransaction'
 import { CreateIntervalCall } from './interval'
 import _ from 'lodash'
 import Collapse from '@material-ui/core/Collapse'
 import MoneyOffIcon from '@material-ui/icons/MoneyOff'
 import SearchIcon from '@material-ui/icons/Search'
 import Edit from '@material-ui/icons/Edit'
+import StorageRoundedIcon from '@material-ui/icons/StorageRounded'
 export function StatusTemplate({ string }) {
   const classes = useStyles()
   return (
@@ -137,11 +142,14 @@ export default function User() {
   const [userId, setUserID] = React.useState('')
   const [statusDialog, setStatusDialog] = React.useState(false)
   const [statusEdit, setStatusEdit] = React.useState(false)
+  const [statusTransaction, setStatuTransaction] = React.useState(false)
   const [snackBar, setSnackBar] = React.useState({
     string: '',
     severity: '',
   })
-
+  const closeDialogTransaction = () => {
+    setStatuTransaction(false)
+  }
   const closeDialogEdit = () => {
     setStatusEdit(false)
   }
@@ -397,6 +405,21 @@ export default function User() {
               disabled={true}
             >
               <MoneyOffIcon />
+            </Button>{' '}
+            <Button
+              variant="outlined"
+              style={{
+                color: '#007373',
+                border: '1px solid #007373',
+              }}
+              className={classes.button}
+              disableElevation
+              onClick={(e) => {
+                setStatuTransaction(true)
+                setUserID(id)
+              }}
+            >
+              <StorageRoundedIcon />
             </Button>
           </React.Fragment>
         )}
@@ -521,6 +544,8 @@ export default function User() {
     }
   }
 
+  // transaction by customer uuid
+
   return (
     <Grid container spacing={3}>
       <DialogDelete
@@ -528,6 +553,11 @@ export default function User() {
         open={statusDialog}
         id={userId}
         onCloseDialog={closeDialog}
+      />
+      <DialogTransactiont
+        uuid={userId}
+        onCloseDialog={closeDialogTransaction}
+        open={statusTransaction}
       />
       <DialogEdit
         id={userId}

@@ -29,9 +29,6 @@ export default function DialogDelete(props) {
             <Typography variant="body2" style={{ fontSize: '16px' }}>
               Are you sure you want to approve this transaction
             </Typography>
-            <Typography variant="body2" style={{ fontSize: '16px' }}>
-              user id : {props.id} ?
-            </Typography>
           </DialogContentText>
         </DialogContent>
 
