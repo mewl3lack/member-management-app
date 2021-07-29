@@ -19,7 +19,7 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import TabPanel from '@material-ui/lab/TabPanel'
 import TabContext from '@material-ui/lab/TabContext'
-import DialogDelete from '../userManagement/dialogDelete'
+import DialogDelete from './dialogDelete'
 
 import CheckIcon from '@material-ui/icons/Check'
 export function StatusTemplate({ string }) {
