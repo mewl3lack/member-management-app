@@ -9,11 +9,8 @@ import Button from '@material-ui/core/Button'
 import AddTwoToneIcon from '@material-ui/icons/AddTwoTone'
 import axios from 'axios'
 import qs from 'qs'
-import Loader from '../../component/loaderBackdrop'
 import AlertSnackBar from '../../component/snackBarAlert'
 import { getskeletonTransaction } from '../../function/getSkeleton'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
 import _ from 'lodash'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -44,6 +41,7 @@ export function StatusTemplate({ string }) {
   )
 }
 export default function User(props) {
+  debugger
   const classes = useStyles()
   let rows = []
   let data = {}
@@ -143,12 +141,12 @@ export default function User(props) {
         onFunction={sortCustom}
       />,
     )
-    if (type === 'All' && props === undefined) {
+    if (type === 'All' && _.isEmpty(props)) {
       var params = {
         query: `
         [{"$match":{}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
       }
-    } else if (type !== 'All' && props === undefined) {
+    } else if (type !== 'All' && _.isEmpty(props)) {
       var params = {
         query: `
         [{"$match":{"type":"${type}"}},{"$lookup":{"from":"user_members","localField":"user_member_id","foreignField":"_id","as":"members"}}]`,
